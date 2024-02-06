@@ -1,22 +1,23 @@
 package simonelli.fabio.CapstoneProject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import simonelli.fabio.CapstoneProject.entities.enums.ROLE;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@NoArgsConstructor
 @Entity
 @Getter
-@JsonIgnoreProperties({"accountNonExpired", "credentialsNonExpired", "enabled", "accountNonLocked", "authorities", "password", "role"})
+@Table(name = "users")
+@JsonIgnoreProperties({"accountNonExpired", "credentialsNonExpired", "enabled", "accountNonLocked", "authorities", "password", "role", "posts"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -31,6 +32,16 @@ public class User implements UserDetails {
     private String phoneNumber;
     private String password;
     private int reputation;
+    private LocalDateTime signUpDate;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> posts;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Like> likes;
+
+    public User() {
+        this.signUpDate = LocalDateTime.now();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -105,5 +116,9 @@ public class User implements UserDetails {
 
     public void setReputation(int reputation) {
         this.reputation = reputation;
+    }
+
+    public void addPost(Post post){
+        this.posts.add(post);
     }
 }

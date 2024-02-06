@@ -54,6 +54,7 @@ public class CustomExceptionHandler {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), ex.getMessage());
             errorDetail.setProperty("payload_error", "Problema nel payload!");
         } else {
+            ex.printStackTrace();
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), ex.getMessage());
             errorDetail.setProperty("error", "Problema nostro, risolveremo presto!");
         }
