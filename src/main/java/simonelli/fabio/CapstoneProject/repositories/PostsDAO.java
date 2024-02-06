@@ -13,4 +13,6 @@ import java.util.UUID;
 @Repository
 public interface PostsDAO extends JpaRepository<Post, UUID> {
     public List<Post> findByUser(User user);
+
+    public Page<Post> findByHashtags_HashtagText(String hashtagText, Pageable pageable);
 }

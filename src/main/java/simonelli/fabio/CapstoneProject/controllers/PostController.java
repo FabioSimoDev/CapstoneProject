@@ -57,6 +57,11 @@ public class PostController {
         return postService.findByUser(currentUser);
     }
 
+    @PostMapping("/{postId}/addHashtag/{hashtagText}")
+    public PostResponseDTO addHashtagToPost(@PathVariable UUID postId, @PathVariable String hashtagText){
+        return postService.addHashtagToPost(postId, hashtagText);
+    }
+
 //    @GetMapping("/me/latest")
 //    public getLatestPost(@AuthenticationPrincipal User currentUser){
 //        postService.findLatestByUser(currentUser.getId());

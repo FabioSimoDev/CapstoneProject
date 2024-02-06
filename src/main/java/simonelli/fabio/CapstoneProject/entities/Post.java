@@ -54,4 +54,8 @@ public class Post {
     public Post() {
         this.publishDate = LocalDateTime.now();
     }
+
+    public void addHashtag(Hashtag hashtag){
+        this.hashtags.add(hashtag);
+    }
 }
