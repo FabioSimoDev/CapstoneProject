@@ -36,7 +36,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts;
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Like> likes;
 
     public User() {
@@ -120,5 +120,8 @@ public class User implements UserDetails {
 
     public void addPost(Post post){
         this.posts.add(post);
+    }
+    public void addLike(Like like){
+        this.likes.add(like);
     }
 }

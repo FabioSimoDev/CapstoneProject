@@ -21,6 +21,7 @@ public class Post {
     private String content;
     private String imageURL;
     private LocalDateTime publishDate;
+    @JsonIgnore
     @ManyToOne
     private User user;
     @JsonIgnore

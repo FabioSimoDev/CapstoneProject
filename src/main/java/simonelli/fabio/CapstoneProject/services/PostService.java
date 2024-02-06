@@ -55,13 +55,17 @@ public class PostService {
         return new PostResponseDTO(id, found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
     }
 
+    public Post findPostById(UUID id) {
+        return postsDAO.findById(id).orElseThrow(() -> new NotFoundException("Post con ID " + id + " non trovato."));
+    }
+
     public void findByIdAndDelete(UUID id) {
-        Post found = postsDAO.findById(id).orElseThrow(() -> new NotFoundException("Post con ID " + id + " non trovato."));
+        Post found = this.findPostById(id);
         postsDAO.delete(found);
     }
 
     public PostResponseDTO findByIdAndUpdate(UUID id, UpdateExistingPostDTO body) {
-        Post found = postsDAO.findById(id).orElseThrow(() -> new NotFoundException("Post con ID " + id + " non trovato."));
+        Post found = this.findPostById(id);
         if (body.content() != null && !body.content().isEmpty()) {
             if (body.content().length() > 300)
                 throw new BadRequestException("Il contenuto è troppo lungo: max 300 caratteri.");
