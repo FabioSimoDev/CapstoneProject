@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -30,6 +32,14 @@ public class Post {
     @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
+    @ManyToMany
+    @JoinTable(
+            name = "post_hashtags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
+    )
+    @JsonIgnore
+    private Set<Hashtag> hashtags = new HashSet<>();
 
     public Post(UUID id, String title, String content, String imageURL, LocalDateTime publishDate, User user, List<Like> likes) {
         this.id = id;
@@ -43,5 +53,13 @@ public class Post {
 
     public Post() {
         this.publishDate = LocalDateTime.now();
+    }
+
+    public void addHashtag(Hashtag hashtag){
+        this.hashtags.add(hashtag);
+    }
+
+    public void removeHashtag(Hashtag hashtag){
+        this.hashtags.remove(hashtag);
     }
 }

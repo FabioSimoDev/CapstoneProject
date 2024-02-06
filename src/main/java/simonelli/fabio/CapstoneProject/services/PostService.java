@@ -7,13 +7,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import simonelli.fabio.CapstoneProject.entities.Hashtag;
 import simonelli.fabio.CapstoneProject.entities.Post;
 import simonelli.fabio.CapstoneProject.entities.User;
 import simonelli.fabio.CapstoneProject.exceptions.BadRequestException;
 import simonelli.fabio.CapstoneProject.exceptions.NotFoundException;
+import simonelli.fabio.CapstoneProject.payloads.NewHastagDTO;
 import simonelli.fabio.CapstoneProject.payloads.NewPostDTO;
 import simonelli.fabio.CapstoneProject.payloads.PostResponseDTO;
 import simonelli.fabio.CapstoneProject.payloads.UpdateExistingPostDTO;
+import simonelli.fabio.CapstoneProject.repositories.HashtagsDAO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 import simonelli.fabio.CapstoneProject.repositories.UsersDAO;
 
@@ -28,6 +31,12 @@ public class PostService {
 
     @Autowired
     UsersDAO usersDAO;
+
+    @Autowired
+    HashtagService hashtagService;
+
+    @Autowired
+    HashtagsDAO hashtagsDAO;
 
     public Page<Post> getAllPosts(int page, int size, String orderBy) {
         if (size >= 50) size = 50;
@@ -95,5 +104,26 @@ public class PostService {
         }).toList();
 
         return postResponseDTOS;
+    }
+
+    @Transactional
+    public PostResponseDTO addHashtagToPost(UUID postId, String hashtag){
+        Post found = this.findPostById(postId);
+        NewHastagDTO newHastagDTO = new NewHastagDTO(hashtag);
+        UUID newHashtagId = hashtagService.saveHashtag(newHastagDTO).id();
+        Hashtag newHashtag = hashtagsDAO.findById(newHashtagId).get();
+        found.addHashtag(newHashtag);
+        postsDAO.save(found);
+        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
+    }
+
+    @Transactional
+    public PostResponseDTO removeHashtagFromPost(UUID postId, String hashtag){
+        Post found = this.findPostById(postId);
+        NewHastagDTO newHastagDTO = new NewHastagDTO(hashtag);
+        UUID newHashtagId = hashtagService.saveHashtag(newHastagDTO).id();
+        Hashtag newHashtag = hashtagsDAO.findById(newHashtagId).get();
+        found.removeHashtag(newHashtag);
+        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
     }
 }

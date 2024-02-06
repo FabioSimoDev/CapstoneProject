@@ -57,6 +57,19 @@ public class PostController {
         return postService.findByUser(currentUser);
     }
 
+    @PostMapping("/{postId}/addHashtag/{hashtagText}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PostResponseDTO addHashtagToPost(@PathVariable UUID postId, @PathVariable String hashtagText){
+        return postService.addHashtagToPost(postId, hashtagText);
+    }
+
+    @DeleteMapping("/{postId}/removeHashtag/{hashtagText}")
+    @ResponseStatus(HttpStatus.OK)
+    public PostResponseDTO removeHashtagFromPost(@PathVariable UUID postId, @PathVariable String hashtagText){
+        return postService.removeHashtagFromPost(postId, hashtagText);
+    }
+
+
 //    @GetMapping("/me/latest")
 //    public getLatestPost(@AuthenticationPrincipal User currentUser){
 //        postService.findLatestByUser(currentUser.getId());
