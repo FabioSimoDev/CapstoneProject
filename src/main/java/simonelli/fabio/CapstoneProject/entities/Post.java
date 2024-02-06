@@ -27,6 +27,9 @@ public class Post {
     @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<Like> likes;
+    @JsonIgnore
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments;
 
     public Post(UUID id, String title, String content, String imageURL, LocalDateTime publishDate, User user, List<Like> likes) {
         this.id = id;

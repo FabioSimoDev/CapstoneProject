@@ -44,7 +44,7 @@ public class EntityLoaderRunner implements CommandLineRunner {
         boolean validOption = false;
 
         do {
-            System.out.println("Vuoi caricare i file 'province-italiane.csv' e 'comuni-italiani.csv'? (y/n)");
+            System.out.println("Vuoi Caricare Utenti, Post e Like? (y/n)");
             String choice = scanner.nextLine().toLowerCase();
 
             switch (choice) {

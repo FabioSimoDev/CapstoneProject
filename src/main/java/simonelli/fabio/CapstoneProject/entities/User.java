@@ -39,11 +39,15 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Like> likes;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     public User() {
         this.signUpDate = LocalDateTime.now();
         this.posts = new ArrayList<>();
         this.likes = new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
 
     @Override
@@ -126,5 +130,9 @@ public class User implements UserDetails {
     }
     public void addLike(Like like){
         this.likes.add(like);
+    }
+
+    public void addComment(Comment comment){
+        this.comments.add(comment);
     }
 }

@@ -12,6 +12,7 @@ import simonelli.fabio.CapstoneProject.payloads.PostResponseDTO;
 import simonelli.fabio.CapstoneProject.payloads.UpdateExistingPostDTO;
 import simonelli.fabio.CapstoneProject.services.PostService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -49,6 +50,11 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     public PostResponseDTO getPostByIdAndUpdate(@PathVariable UUID postId, @RequestBody UpdateExistingPostDTO body){
         return postService.findByIdAndUpdate(postId, body);
+    }
+
+    @GetMapping("/me")
+    public List<PostResponseDTO> getLoggedUserPosts(@AuthenticationPrincipal User currentUser){
+        return postService.findByUser(currentUser);
     }
 
 //    @GetMapping("/me/latest")

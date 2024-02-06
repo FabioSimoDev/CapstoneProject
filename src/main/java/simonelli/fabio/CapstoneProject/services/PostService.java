@@ -17,7 +17,9 @@ import simonelli.fabio.CapstoneProject.payloads.UpdateExistingPostDTO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 import simonelli.fabio.CapstoneProject.repositories.UsersDAO;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -85,5 +87,13 @@ public class PostService {
         }
 
         return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
+    }
+
+    public List<PostResponseDTO> findByUser(User user){
+        List<PostResponseDTO> postResponseDTOS = postsDAO.findByUser(user).stream().map(post -> {
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), post.getUser().getId());
+        }).toList();
+
+        return postResponseDTOS;
     }
 }
