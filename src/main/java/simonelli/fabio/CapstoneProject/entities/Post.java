@@ -58,4 +58,8 @@ public class Post {
     public void addHashtag(Hashtag hashtag){
         this.hashtags.add(hashtag);
     }
+
+    public void removeHashtag(Hashtag hashtag){
+        this.hashtags.remove(hashtag);
+    }
 }

@@ -106,6 +106,7 @@ public class PostService {
         return postResponseDTOS;
     }
 
+    @Transactional
     public PostResponseDTO addHashtagToPost(UUID postId, String hashtag){
         Post found = this.findPostById(postId);
         NewHastagDTO newHastagDTO = new NewHastagDTO(hashtag);
@@ -113,6 +114,16 @@ public class PostService {
         Hashtag newHashtag = hashtagsDAO.findById(newHashtagId).get();
         found.addHashtag(newHashtag);
         postsDAO.save(found);
+        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
+    }
+
+    @Transactional
+    public PostResponseDTO removeHashtagFromPost(UUID postId, String hashtag){
+        Post found = this.findPostById(postId);
+        NewHastagDTO newHastagDTO = new NewHastagDTO(hashtag);
+        UUID newHashtagId = hashtagService.saveHashtag(newHastagDTO).id();
+        Hashtag newHashtag = hashtagsDAO.findById(newHashtagId).get();
+        found.removeHashtag(newHashtag);
         return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
     }
 }
