@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import simonelli.fabio.CapstoneProject.entities.enums.ROLE;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +42,8 @@ public class User implements UserDetails {
 
     public User() {
         this.signUpDate = LocalDateTime.now();
+        this.posts = new ArrayList<>();
+        this.likes = new ArrayList<>();
     }
 
     @Override
