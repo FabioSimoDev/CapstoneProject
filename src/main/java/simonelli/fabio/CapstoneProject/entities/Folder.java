@@ -19,7 +19,7 @@ public class Folder {
     private String name;
     @ManyToOne
     private User user;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable
     private Set<Post> posts = new HashSet<>();
     private LocalDateTime date;

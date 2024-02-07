@@ -89,6 +89,12 @@ public class FolderService {
         return returnFolderWithPostsDTO(found, postResponseDTOSPage);
     }
 
+    public void deleteFolder(User authenticatedUser, UUID folderId){
+        Folder found = this.findFolderById(folderId);
+        if(!(found.getUser().getId().equals(authenticatedUser.getId()))) throw new UnauthorizedException("Non puoi modificare le cartelle di un altro utente");
+        folderDAO.delete(found);
+    }
+
     public Folder findFolderById(UUID id) {
         return folderDAO.findById(id).orElseThrow(() -> new NotFoundException("Cartella con id " + id + " non trovata"));
     }

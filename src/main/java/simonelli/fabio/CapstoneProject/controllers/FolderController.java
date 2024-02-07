@@ -55,4 +55,10 @@ public class FolderController {
                                               @RequestParam(defaultValue = "20") int size) {
         return folderService.addPostToFolder(currentUser, folderId, postId, page, size);
     }
+
+    @DeleteMapping("/{folderId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFolder(@AuthenticationPrincipal User currentUser, @PathVariable UUID folderId){
+        folderService.deleteFolder(currentUser, folderId);
+    }
 }
