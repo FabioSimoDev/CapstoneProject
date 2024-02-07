@@ -28,7 +28,6 @@ public class User implements UserDetails {
     private String avatarURL;
     private String phoneNumber;
     private String password;
-    private int reputation;
     private LocalDateTime signUpDate;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts;
@@ -41,6 +40,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Folder> folders = new HashSet<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Reputation reputation;
 
     public User() {
         this.signUpDate = LocalDateTime.now();
@@ -120,7 +122,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public void setReputation(int reputation) {
+    public void setReputation(Reputation reputation){
         this.reputation = reputation;
     }
 

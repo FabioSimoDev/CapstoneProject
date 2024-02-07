@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import simonelli.fabio.CapstoneProject.entities.User;
+import simonelli.fabio.CapstoneProject.payloads.ReputationDTO;
 import simonelli.fabio.CapstoneProject.payloads.UpdateExistingUserDTO;
 import simonelli.fabio.CapstoneProject.exceptions.BadRequestException;
 import simonelli.fabio.CapstoneProject.services.AuthService;
@@ -53,5 +54,16 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCurrentClient(@AuthenticationPrincipal User currentUser){
         usersService.deleteCurrentClient(currentUser);
+    }
+
+    //REPUTAZIONE
+    @GetMapping("/{userId}/reputation")
+    public ReputationDTO getUserReputation(@PathVariable UUID userId){
+        return usersService.getReputationFromUser(userId);
+    }
+
+    @PutMapping("/{userId}/reputation")
+    public ReputationDTO addUserReputation(@AuthenticationPrincipal User currentUser, @PathVariable UUID userId){
+        return usersService.addReputationToUser(currentUser, userId);
     }
 }
