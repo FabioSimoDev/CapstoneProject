@@ -6,8 +6,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import simonelli.fabio.CapstoneProject.entities.Reputation;
 import simonelli.fabio.CapstoneProject.entities.User;
+import simonelli.fabio.CapstoneProject.exceptions.BadRequestException;
 import simonelli.fabio.CapstoneProject.exceptions.NotFoundException;
+import simonelli.fabio.CapstoneProject.payloads.ReputationDTO;
+import simonelli.fabio.CapstoneProject.repositories.ReputationDAO;
 import simonelli.fabio.CapstoneProject.repositories.UsersDAO;
 
 import java.util.UUID;
@@ -16,7 +20,10 @@ import java.util.UUID;
 public class UsersService {
 
     @Autowired
-    UsersDAO usersDAO;
+    private UsersDAO usersDAO;
+
+    @Autowired
+    private ReputationDAO reputationDAO;
 
     public Page<User> getUsers(int page, int size, String orderBy) {
         if(size>=100)size=100;
@@ -39,6 +46,34 @@ public class UsersService {
 
     public void deleteCurrentClient(User user){
         usersDAO.delete(user);
+    }
+
+    public ReputationDTO getReputationFromUser(UUID userId){
+        Reputation found = reputationDAO.findByUserId(userId).orElseThrow(()->new NotFoundException("Problema nell'ottenere la reputazione dell'utente!"));
+        return new ReputationDTO(found.getId(), found.getUser().getId(), found.getPoints());
+    }
+
+    public ReputationDTO addReputationToUser(User senderUser, UUID targetUser){
+        User found = this.findById(targetUser);
+        if(senderUser.getId().equals(targetUser)) throw new BadRequestException("Non puoi aggiungere reputazione a te stesso!");
+        if(found.getReputation() == null){
+            Reputation newReputation = new Reputation();
+            newReputation.setUser(found);
+            newReputation.setPoints(1);
+            found.setReputation(newReputation);
+            reputationDAO.save(newReputation);
+            return returnReputationDTO(newReputation);
+        }else{
+            Reputation reputation = found.getReputation();
+            reputation.setPoints(reputation.getPoints() + 1);
+            reputationDAO.save(reputation);
+            return returnReputationDTO(reputation);
+        }
+
+    }
+
+    private ReputationDTO returnReputationDTO(Reputation reputation){
+        return new ReputationDTO(reputation.getId(), reputation.getUser().getId(), reputation.getPoints());
     }
 
     public User save(User user){
