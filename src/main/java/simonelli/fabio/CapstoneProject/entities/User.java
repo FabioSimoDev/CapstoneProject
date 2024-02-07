@@ -1,6 +1,5 @@
 package simonelli.fabio.CapstoneProject.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,15 +9,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import simonelli.fabio.CapstoneProject.entities.enums.ROLE;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
 @Table(name = "users")
-@JsonIgnoreProperties({"accountNonExpired", "credentialsNonExpired", "enabled", "accountNonLocked", "authorities", "password", "role", "posts"})
+@JsonIgnoreProperties({"accountNonExpired", "credentialsNonExpired", "enabled", "accountNonLocked", "authorities", "password", "role", "posts", "folders", "comments", "likes"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -36,12 +32,15 @@ public class User implements UserDetails {
     private LocalDateTime signUpDate;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts;
-    @JsonIgnore
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Like> likes;
-    @JsonIgnore
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Folder> folders = new HashSet<>();
 
     public User() {
         this.signUpDate = LocalDateTime.now();
@@ -125,14 +124,19 @@ public class User implements UserDetails {
         this.reputation = reputation;
     }
 
-    public void addPost(Post post){
+    public void addPost(Post post) {
         this.posts.add(post);
     }
-    public void addLike(Like like){
+
+    public void addLike(Like like) {
         this.likes.add(like);
     }
 
-    public void addComment(Comment comment){
+    public void addComment(Comment comment) {
         this.comments.add(comment);
+    }
+
+    public void addFolder(Folder folder) {
+        this.folders.add(folder);
     }
 }

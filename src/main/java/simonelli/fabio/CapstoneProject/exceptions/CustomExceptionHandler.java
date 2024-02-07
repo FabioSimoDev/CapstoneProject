@@ -2,6 +2,7 @@ package simonelli.fabio.CapstoneProject.exceptions;
 
 
 import org.springframework.http.ProblemDetail;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -49,6 +50,10 @@ public class CustomExceptionHandler {
         else if (ex instanceof NotFoundException) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getMessage());
             errorDetail.setProperty("not_found", "Elemento non trovato");
+        }
+        else if(ex instanceof HttpRequestMethodNotSupportedException){
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(405), ex.getMessage());
+            errorDetail.setProperty("method_not_allowed", "Metodo non valido");
         }
         else if (ex instanceof BadRequestException) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), ex.getMessage());
