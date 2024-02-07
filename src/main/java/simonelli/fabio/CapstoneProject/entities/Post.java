@@ -40,6 +40,9 @@ public class Post {
     )
     @JsonIgnore
     private Set<Hashtag> hashtags = new HashSet<>();
+    @JsonIgnore
+    @ManyToMany
+    private Set<Folder> folders;
 
     public Post(UUID id, String title, String content, String imageURL, LocalDateTime publishDate, User user, List<Like> likes) {
         this.id = id;
@@ -62,4 +65,6 @@ public class Post {
     public void removeHashtag(Hashtag hashtag){
         this.hashtags.remove(hashtag);
     }
+
+    public void addFolder(Folder folder) { this.folders.add(folder); }
 }

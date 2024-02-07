@@ -40,4 +40,8 @@ public class UsersService {
     public void deleteCurrentClient(User user){
         usersDAO.delete(user);
     }
+
+    public User save(User user){
+        return usersDAO.save(user);
+    }
 }
