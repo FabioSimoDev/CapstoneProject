@@ -79,6 +79,7 @@ public class UserController {
     }
 
     @PostMapping("/me/noteRequests")
+    @ResponseStatus(HttpStatus.CREATED)
     public NoteRequestDTO createNoteRequest(@AuthenticationPrincipal User currentUser, @RequestBody @Validated NewNoteRequestDTO body, BindingResult validation){
         if(validation.hasErrors()) throw new BadRequestException(validation.getAllErrors());
         return usersService.createNewNoteRequest(currentUser, body);

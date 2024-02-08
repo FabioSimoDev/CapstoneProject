@@ -86,7 +86,7 @@ public class UsersService {
     public Page<NoteRequestDTO> getAllPersonalNoteRequests(User user, int page, int size, String orderBy){
         if(size > 10) size = 10;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        Page<NoteRequest> noteRequestPage = noteRequestDAO.findByUser(user);
+        Page<NoteRequest> noteRequestPage = noteRequestDAO.findByUser(user, pageable);
 
         return noteRequestPage.map(noteRequest -> {
             return new NoteRequestDTO(noteRequest.getId(), noteRequest.getDetails(), noteRequest.getDate(), noteRequest.getUser().getId());
