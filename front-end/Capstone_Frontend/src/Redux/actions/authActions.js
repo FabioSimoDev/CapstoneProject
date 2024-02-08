@@ -74,11 +74,15 @@ export const register = (userData) => {
           "Content-Type": "application/json"
         }
       });
-      await response.json();
-      dispatch(registerSuccess());
+      if (response.ok) {
+        dispatch(registerSuccess());
+      } else {
+        throw response;
+      }
     } catch (error) {
-      dispatch(registerFailure(error.message));
-      console.error(error.message);
+      const body = await error.json();
+      dispatch(registerFailure(body.detail));
+      console.error(body.detail);
     }
   };
 };

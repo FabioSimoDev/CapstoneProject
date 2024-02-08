@@ -15,7 +15,7 @@ function App() {
     //     password: "1234"
     //   })
     // );
-    dispatch(login({ email: "fabido@gmail.com", password: "1234" }));
+    dispatch(login({ email: "fabio@gmail.com", password: "1234" }));
   });
   if (token) {
     return (
