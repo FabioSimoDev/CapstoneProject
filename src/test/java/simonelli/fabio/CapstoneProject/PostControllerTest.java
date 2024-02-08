@@ -28,13 +28,12 @@ import simonelli.fabio.CapstoneProject.services.UsersService;
 //@ExtendWith(SpringExtension.class)
 //@WebMvcTest(AuthController.class)
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 public class PostControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(username = "Guido Ferretti", roles = {"USER"})
     public void testRegister() throws Exception {
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
