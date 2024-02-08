@@ -84,4 +84,10 @@ public class UserController {
         if(validation.hasErrors()) throw new BadRequestException(validation.getAllErrors());
         return usersService.createNewNoteRequest(currentUser, body);
     }
+
+    @PutMapping("/me/updateRequest/{requestId}")
+    public NoteRequestDTO updateNoteRequest(@AuthenticationPrincipal User currentUser, @PathVariable UUID requestId, @RequestBody @Validated NewNoteRequestDTO body, BindingResult validation){
+        if(validation.hasErrors()) throw new BadRequestException(validation.getAllErrors());
+        return usersService.updateNoteRequest(currentUser, requestId, body);
+    }
 }

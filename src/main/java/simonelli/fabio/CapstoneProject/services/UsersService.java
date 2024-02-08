@@ -101,6 +101,19 @@ public class UsersService {
         return new NoteRequestDTO(newNoteRequest.getId(), newNoteRequest.getDetails(), newNoteRequest.getDate(), newNoteRequest.getUser().getId());
     }
 
+    public NoteRequestDTO findNoteRequestById(UUID id){
+        NoteRequest found = noteRequestDAO.findById(id).orElseThrow(()->new NotFoundException("Richiesta con ID " + id + " non trovata."));
+        return new NoteRequestDTO(found.getId(), found.getDetails(), found.getDate(), found.getUser().getId());
+    }
+
+    public NoteRequestDTO updateNoteRequest(User authenticatedUser, UUID requestId, NewNoteRequestDTO body){
+        User user = this.findById(authenticatedUser.getId());
+        NoteRequest foundNoteRequest = noteRequestDAO.findById(requestId).orElseThrow(()->new NotFoundException("Richiesta con ID " + requestId + " non trovata."));
+        foundNoteRequest.setDetails(body.details());
+        this.save(user);
+        return new NoteRequestDTO(foundNoteRequest.getId(), foundNoteRequest.getDetails(), foundNoteRequest.getDate(), foundNoteRequest.getUser().getId());
+    }
+
     public User save(User user){
         return usersDAO.save(user);
     }
