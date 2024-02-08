@@ -114,6 +114,12 @@ public class UsersService {
         return new NoteRequestDTO(foundNoteRequest.getId(), foundNoteRequest.getDetails(), foundNoteRequest.getDate(), foundNoteRequest.getUser().getId());
     }
 
+    public void deleteRequest(User authenticatedUser, UUID requestId){
+        User user = this.findById(authenticatedUser.getId());
+        NoteRequest foundNoteRequest = noteRequestDAO.findById(requestId).orElseThrow(()->new NotFoundException("Richiesta con ID " + requestId + " non trovata."));
+        noteRequestDAO.delete(foundNoteRequest);
+    }
+
     public User save(User user){
         return usersDAO.save(user);
     }

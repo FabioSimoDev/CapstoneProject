@@ -90,4 +90,10 @@ public class UserController {
         if(validation.hasErrors()) throw new BadRequestException(validation.getAllErrors());
         return usersService.updateNoteRequest(currentUser, requestId, body);
     }
+
+    @DeleteMapping("/me/deleteRequest/{requestId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteNoteRequest(@AuthenticationPrincipal User currentUser, @PathVariable UUID requestId){
+        usersService.deleteRequest(currentUser, requestId);
+    }
 }
