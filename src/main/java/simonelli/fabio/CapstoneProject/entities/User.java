@@ -3,6 +3,7 @@ package simonelli.fabio.CapstoneProject.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import java.util.*;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "users")
 @JsonIgnoreProperties({"accountNonExpired", "credentialsNonExpired", "enabled", "accountNonLocked", "authorities", "password", "role", "posts", "folders", "comments", "likes"})
 public class User implements UserDetails {
@@ -44,11 +46,15 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Reputation reputation;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<NoteRequest> noteRequests;
+
     public User() {
         this.signUpDate = LocalDateTime.now();
         this.posts = new ArrayList<>();
         this.likes = new ArrayList<>();
         this.comments = new ArrayList<>();
+        this.noteRequests = new HashSet<>();
     }
 
     @Override
@@ -86,46 +92,6 @@ public class User implements UserDetails {
         return false;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setRole(ROLE role) {
-        this.role = role;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setAvatarURL(String avatarURL) {
-        this.avatarURL = avatarURL;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setReputation(Reputation reputation){
-        this.reputation = reputation;
-    }
-
     public void addPost(Post post) {
         this.posts.add(post);
     }
@@ -140,5 +106,9 @@ public class User implements UserDetails {
 
     public void addFolder(Folder folder) {
         this.folders.add(folder);
+    }
+
+    public void addNoteRequest(NoteRequest noteRequest) {
+        this.noteRequests.add(noteRequest);
     }
 }
