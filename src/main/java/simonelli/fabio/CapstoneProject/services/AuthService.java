@@ -28,19 +28,20 @@ public class AuthService {
     private JWTTools jwtTools;
 
     public User save(UserSignInDTO body) {
-        usersDAO.findByEmail(body.email()).ifPresent(user ->
-        {
-            throw new BadRequestException("l' email " + user.getEmail() + " è già in uso");
-        });
-        User newUser = new User();
-        newUser.setName(body.name());
-        newUser.setSurname(body.surname());
-        newUser.setUsername(body.username());
-        newUser.setRole(ROLE.USER);
-        newUser.setEmail(body.email());
-        newUser.setAvatarURL(("https://ui-avatars.com/api/?name=" + body.name() + "+" + body.surname()));
-        newUser.setPassword(bcrypt.encode(body.password()));
-        return usersDAO.save(newUser);
+        synchronized (this) {
+            usersDAO.findByEmail(body.email()).ifPresent(user -> {
+                throw new BadRequestException("l' email " + user.getEmail() + " è già in uso");
+            });
+            User newUser = new User();
+            newUser.setName(body.name());
+            newUser.setSurname(body.surname());
+            newUser.setUsername(body.username());
+            newUser.setRole(ROLE.USER);
+            newUser.setEmail(body.email());
+            newUser.setAvatarURL(("https://ui-avatars.com/api/?name=" + body.name() + "+" + body.surname()));
+            newUser.setPassword(bcrypt.encode(body.password()));
+            return usersDAO.save(newUser);
+        }
     }
 
     public String authenticateUser(UserLoginDTO body) {

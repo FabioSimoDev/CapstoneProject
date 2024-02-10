@@ -89,12 +89,12 @@ public class PostService {
             found.setTitle(body.title());
         }
 
-        if (body.image_url() != null && !body.image_url().isEmpty()) {
-            found.setImageURL(body.image_url());
-        } else if ((body.image_url() == null && body.title() == null && body.content() == null)) {
+        if (body.imageURL() != null && !body.imageURL().isEmpty()) {
+            found.setImageURL(body.imageURL());
+        } else if ((body.imageURL() == null && body.title() == null && body.content() == null)) {
             throw new BadRequestException("Il payload non può essere vuoto!");
         }
-
+        postsDAO.save(found);
         return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
     }
 
