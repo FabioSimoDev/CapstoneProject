@@ -1,0 +1,24 @@
+@keyframes scale-up-ver-center {
+  0% {
+    transform: scaleY(0.4);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@-webkit-keyframes scale-up-ver-center {
+  0% {
+    -webkit-transform: scaleY(0.4);
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+  }
+}
+
+.animate-scale-up-ver-center {
+  animation: scale-up-ver-center 0.9s cubic-bezier(0.39, 0.575, 0.565, 1) 6
+    alternate-reverse both;
+  -webkit-animation: scale-up-ver-center 0.9s
+    cubic-bezier(0.39, 0.575, 0.565, 1) 6 alternate-reverse both;
+}
