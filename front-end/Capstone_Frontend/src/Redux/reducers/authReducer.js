@@ -2,7 +2,7 @@ import { ActionTypes } from "../actions/authActions";
 
 const initialState = {
   isLoading: false,
-  token: null,
+  token: localStorage.getItem("TOKEN") || null,
   error: null
 };
 

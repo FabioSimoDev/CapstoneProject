@@ -1,16 +1,20 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../styles/test.css";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../Redux/actions/authActions";
 // import logo from "../assets/logo.png";
 import screenshot from "../assets/screen-placeholder.png";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [darkMode, setDarkMode] = useState(true);
   const error = useSelector((state) => state.auth.error);
+  const token = useSelector((state) => state.auth.token);
+  const loading = useSelector((state) => state.auth.isLoading);
   const emailRef = useRef();
   const passwordRef = useRef();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
@@ -25,6 +29,12 @@ const LoginPage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (token && !error) {
+      navigate("/home");
+    }
+  }, [token, error]);
 
   return (
     <div className={darkMode ? "dark" : ""}>
@@ -74,7 +84,10 @@ const LoginPage = () => {
               <p className="text-red-700 dark:text-red-500 text-center py-2">
                 {error}
               </p>
+            ) : loading ? (
+              <div className="loader mx-auto my-4"></div>
             ) : null}
+
             <hr className="my-8" />
             <p className="text-indigo-500 active:text-indigo-200/50 cursor-pointer opacity-90 text-center">
               Password dimenticata?

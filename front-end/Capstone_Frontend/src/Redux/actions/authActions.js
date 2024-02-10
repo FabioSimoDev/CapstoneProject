@@ -51,6 +51,7 @@ export const login = (credentials) => {
       });
       if (response.ok) {
         const data = await response.json();
+        localStorage.setItem("TOKEN", data.token);
         dispatch(loginSuccess(data.token));
       } else {
         throw response;
