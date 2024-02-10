@@ -1,12 +1,15 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from "./Components/LoginPage";
+import SignUpPage from "./Components/SignUpPage";
+
 function App() {
   return (
-    <>
-      <div className="mx-auto px-3">
-        <h1 className="font-bold text-white">
-          PROGETTO SOCIAL - JAVA, SPRING, TAILWIND, REACT
-        </h1>
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
