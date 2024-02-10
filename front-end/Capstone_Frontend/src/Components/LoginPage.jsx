@@ -96,7 +96,12 @@ const LoginPage = () => {
           <div className="md:max-w-md max-w-sm sm:w-full w-11/12 px-6 py-8 bg-white dark:bg-gray-800 shadow-md rounded-md">
             <p className="text-center dark:text-white text-black">
               Non hai un account?{" "}
-              <span className="text-blue-600 cursor-pointer">Iscriviti</span>
+              <span
+                className="text-blue-600 cursor-pointer"
+                onClick={() => navigate("/signup")}
+              >
+                Iscriviti
+              </span>
             </p>
           </div>
         </div>
