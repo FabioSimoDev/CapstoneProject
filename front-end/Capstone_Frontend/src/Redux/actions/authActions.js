@@ -84,6 +84,7 @@ export const register = (userData) => {
       const body = await error.json();
       dispatch(registerFailure(body.detail));
       console.error(body.detail);
+      return body.detail;
     }
   };
 };

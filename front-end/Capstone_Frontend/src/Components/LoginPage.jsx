@@ -39,7 +39,12 @@ const LoginPage = () => {
   return (
     <div className={darkMode ? "dark" : ""}>
       <div className="min-h-screen flex items-center justify-center bg-gray-300 dark:bg-gray-900 gap-5">
-        <img src={screenshot} alt="" className="hidden md:block" />{" "}
+        <img
+          src={screenshot}
+          alt=""
+          className="hidden md:block"
+          draggable="false"
+        />{" "}
         <div className="md:max-w-md max-w-sm sm:w-full w-11/12 px-6 py-8 bg-white dark:bg-gray-800 shadow-md rounded-md">
           <h2 className="text-center mb-8 text-2xl font-semibold text-gray-800 dark:text-gray-100 flex items-center justify-center">
             Login
