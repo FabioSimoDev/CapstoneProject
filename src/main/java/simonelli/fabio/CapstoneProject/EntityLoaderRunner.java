@@ -2,6 +2,7 @@ package simonelli.fabio.CapstoneProject;
 
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,9 @@ public class EntityLoaderRunner implements CommandLineRunner {
     @Autowired
     private PasswordEncoder bcrypt;
 
+    @Value("${auto_load_entities}")
+    private String choice;
+
     @Override
     public void run(String... args) throws Exception {
         Scanner scanner = new Scanner(System.in);
@@ -45,8 +49,7 @@ public class EntityLoaderRunner implements CommandLineRunner {
 
         do {
             System.out.println("Vuoi Caricare Utenti, Post e Like? (y/n)");
-            String choice = scanner.nextLine().toLowerCase();
-
+            System.out.println(choice);
             switch (choice) {
                 case "y":
                     load();
@@ -60,6 +63,7 @@ public class EntityLoaderRunner implements CommandLineRunner {
                     break;
             }
         } while (!validOption);
+
 
         scanner.close();
     }
