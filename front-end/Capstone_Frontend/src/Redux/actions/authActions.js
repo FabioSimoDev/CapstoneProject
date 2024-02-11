@@ -1,6 +1,4 @@
-const BASE_URL = "http://localhost:3001";
-const LOGIN_ENDPOINT = "/auth/login";
-const REGISTER_ENDPOINT = "/auth/register";
+import { AUTH_ENDPOINTS, fetchApi } from "../../utils/backEndUtils.js";
 
 export const ActionTypes = {
   LOGIN_REQUEST: "LOGIN_REQUEST",
@@ -42,24 +40,12 @@ export const login = (credentials) => {
   return async (dispatch) => {
     dispatch(loginRequest(credentials));
     try {
-      const response = await fetch(BASE_URL + LOGIN_ENDPOINT, {
-        method: "POST",
-        body: JSON.stringify(credentials),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("TOKEN", data.token);
-        dispatch(loginSuccess(data.token));
-      } else {
-        throw response;
-      }
+      const data = await fetchApi(AUTH_ENDPOINTS.LOGIN, "POST", credentials);
+      localStorage.setItem("TOKEN", data.token);
+      dispatch(loginSuccess(data.token));
     } catch (error) {
-      const body = await error.json();
-      dispatch(loginFailure(body.detail));
-      console.error(body.detail);
+      dispatch(loginFailure(error.detail));
+      console.error(error.detail);
     }
   };
 };
@@ -68,23 +54,11 @@ export const register = (userData) => {
   return async (dispatch) => {
     dispatch(registerRequest(userData));
     try {
-      const response = await fetch(BASE_URL + REGISTER_ENDPOINT, {
-        method: "POST",
-        body: JSON.stringify(userData),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      if (response.ok) {
-        dispatch(registerSuccess());
-      } else {
-        throw response;
-      }
+      await fetchApi(AUTH_ENDPOINTS.REGISTER, "POST", userData);
+      dispatch(registerSuccess());
     } catch (error) {
-      const body = await error.json();
-      dispatch(registerFailure(body.detail));
-      console.error(body.detail);
-      return body.detail;
+      dispatch(registerFailure(error.detail));
+      console.error(error.detail);
     }
   };
 };
