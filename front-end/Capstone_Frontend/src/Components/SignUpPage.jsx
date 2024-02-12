@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import "../styles/test.css";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../Redux/actions/authActions";
 // import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { setDarkMode } from "../Redux/actions/themeActions";
 
 const SignUpPage = () => {
-  const [darkMode, setDarkMode] = useState(true);
+  // const [darkMode, setDarkMode] = useState(true);
+  const darkMode = useSelector((state) => state.theme.darkMode);
   const error = useSelector((state) => state.auth.error);
   const token = useSelector((state) => state.auth.token);
   const loading = useSelector((state) => state.auth.isLoading);
@@ -18,9 +20,6 @@ const SignUpPage = () => {
   const confirmPasswordRef = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
 
   const startSignUp = (e) => {
     e.preventDefault();
@@ -198,7 +197,7 @@ const SignUpPage = () => {
       </div>
       <div className="absolute top-4 right-4">
         <button
-          onClick={toggleDarkMode}
+          onClick={() => dispatch(setDarkMode(!darkMode))}
           className="bg-gray-200 dark:bg-gray-800 p-3 rounded-md focus:outline-none shadow-lg"
         >
           {darkMode ? (

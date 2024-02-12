@@ -18,6 +18,8 @@ const authReducer = (state = initialState, action) => {
     case ActionTypes.LOGIN_FAILURE:
     case ActionTypes.REGISTER_FAILURE:
       return { ...state, isLoading: false, error: action.payload };
+    case "RESET_AUTH_STATE":
+      return initialState;
     default:
       return state;
   }
