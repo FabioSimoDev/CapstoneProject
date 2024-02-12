@@ -6,7 +6,8 @@ export const ActionTypes = {
   LOGIN_FAILURE: "LOGIN_FAILURE",
   REGISTER_REQUEST: "REGISTER_REQUEST",
   REGISTER_SUCCESS: "REGISTER_SUCCESS",
-  REGISTER_FAILURE: "REGISTER_FAILURE"
+  REGISTER_FAILURE: "REGISTER_FAILURE",
+  RESET_AUTH_STATE: "RESET_AUTH_STATE"
 };
 
 export const loginRequest = (credentials) => ({
@@ -36,6 +37,8 @@ export const registerFailure = (error) => ({
   payload: error
 });
 
+export const resetAuthState = () => ({ type: ActionTypes.RESET_AUTH_STATE });
+
 export const login = (credentials) => {
   return async (dispatch) => {
     dispatch(loginRequest(credentials));
@@ -59,6 +62,7 @@ export const register = (userData) => {
     } catch (error) {
       dispatch(registerFailure(error.detail));
       console.error(error.detail);
+      return error;
     }
   };
 };
