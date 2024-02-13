@@ -1,11 +1,15 @@
 package simonelli.fabio.CapstoneProject.services;
 
+import com.cloudinary.utils.ObjectUtils;
+import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import simonelli.fabio.CapstoneProject.config.CloudinaryConfig;
 import simonelli.fabio.CapstoneProject.entities.NoteRequest;
 import simonelli.fabio.CapstoneProject.entities.Reputation;
 import simonelli.fabio.CapstoneProject.entities.User;
@@ -18,6 +22,7 @@ import simonelli.fabio.CapstoneProject.repositories.NoteRequestDAO;
 import simonelli.fabio.CapstoneProject.repositories.ReputationDAO;
 import simonelli.fabio.CapstoneProject.repositories.UsersDAO;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -31,6 +36,9 @@ public class UsersService {
 
     @Autowired
     private NoteRequestDAO noteRequestDAO;
+
+    @Autowired
+    private Cloudinary cloudinaryUploader;
 
     public Page<User> getUsers(int page, int size, String orderBy) {
         if(size>=100)size=100;
@@ -53,6 +61,18 @@ public class UsersService {
 
     public void deleteCurrentClient(User user){
         usersDAO.delete(user);
+    }
+
+    public String uploadPicture(MultipartFile file, UUID userId) throws IOException
+    {
+
+        String url = (String) cloudinaryUploader.uploader()
+                .upload(file.getBytes(), ObjectUtils.emptyMap())
+                .get("url");
+        User found = this.findById(userId);
+        found.setAvatarURL(url);
+        usersDAO.save(found);
+        return url;
     }
 
     public ReputationDTO getReputationFromUser(UUID userId){
