@@ -6,14 +6,6 @@ import { loadUserData } from "../Redux/actions/userDataActions";
 const Home = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
   const userData = useSelector((state) => state.userData.data);
-  const token = useSelector((state) => state.auth.token);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (token) {
-      dispatch(loadUserData(token));
-    }
-  }, []);
 
   useEffect(() => {
     console.log(userData);

@@ -22,7 +22,7 @@ const Sidebar = () => {
           href="#"
           className="dark:text-white text-black flex items-center space-x-2 px-4 hidden md:flex"
         >
-          <img src={logo} alt="" width={30} />
+          <img src={logo} alt="logo" width="30px" loading="lazy" />
           <span className="text-2xl font-bold hidden lg:inline-block">
             EduShare
           </span>
