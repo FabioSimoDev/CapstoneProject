@@ -5,15 +5,31 @@ export const AUTH_ENDPOINTS = {
   REGISTER: "/auth/register"
 };
 
-export const fetchApi = async (endpoint, method, body) => {
+export const USERS_DATA_ENDPOINT = {
+  PERSONAL_DATA: "/users/me"
+};
+
+export const fetchApi = async (
+  endpoint,
+  method,
+  body,
+  authenticationHeader
+) => {
   try {
-    const response = await fetch(BASE_URL + endpoint, {
+    const options = {
       method,
-      body: JSON.stringify(body),
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + authenticationHeader
       }
-    });
+    };
+
+    if (method !== "GET") {
+      options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(BASE_URL + endpoint, options);
+
     if (response.ok) {
       return await response.json();
     } else {
