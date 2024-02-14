@@ -58,6 +58,11 @@ public class UserController {
         usersService.deleteCurrentClient(currentUser);
     }
 
+    @GetMapping("/me")
+    public User getCurrentUser(@AuthenticationPrincipal User currentUser){
+        return currentUser;
+    }
+
     //REPUTAZIONE
     @GetMapping("/{userId}/reputation")
     public ReputationDTO getUserReputation(@PathVariable UUID userId) {
