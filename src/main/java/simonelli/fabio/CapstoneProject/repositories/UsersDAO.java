@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface UsersDAO extends JpaRepository<User, UUID> {
-    public Optional<User> findByEmail(String email);
+    public Optional<User> findByEmailIgnoreCase(String email);
 
 //    public User findByUser(User user);
 }

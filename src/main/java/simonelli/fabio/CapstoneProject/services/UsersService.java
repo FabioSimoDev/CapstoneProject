@@ -43,7 +43,7 @@ public class UsersService {
     }
 
     public User findByEmail(String email) {
-        return usersDAO.findByEmail(email).orElseThrow(()->new NotFoundException("Questa mail: " +  email + " non è stata trovata."));
+        return usersDAO.findByEmailIgnoreCase(email).orElseThrow(()->new NotFoundException("Questa mail: " +  email + " non è stata trovata."));
     }
 
     public void findByIdAndDelete(UUID id) {
