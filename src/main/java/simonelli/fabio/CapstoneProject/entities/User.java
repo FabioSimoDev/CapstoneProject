@@ -16,7 +16,7 @@ import java.util.*;
 @Getter
 @Setter
 @Table(name = "users")
-@JsonIgnoreProperties({"accountNonExpired", "credentialsNonExpired", "enabled", "accountNonLocked", "authorities", "password", "role", "posts", "folders", "comments", "likes"})
+@JsonIgnoreProperties({"accountNonExpired", "credentialsNonExpired", "enabled", "accountNonLocked", "authorities", "password", "role", "posts", "folders", "comments", "likes", "noteRequests"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue

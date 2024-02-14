@@ -9,6 +9,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const darkMode = useSelector((state) => state.theme.darkMode);
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.userData.data);
 
   return (
     <div className={`flex md:flex-row flex-col ${darkMode ? "dark" : null}`}>
@@ -45,11 +46,20 @@ const Sidebar = () => {
             id="sidebar-profile-link-container"
             className="flex items-center justify-center lg:justify-start rounded transition duration-200 lg:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
           >
-            <FiUser
-              size={24}
-              className=""
-              color={darkMode ? "white" : "black"}
-            />
+            {userData ? (
+              <img
+                width={24}
+                src={userData?.avatarURL}
+                className="rounded-full"
+              ></img>
+            ) : (
+              <FiUser
+                size={24}
+                className=""
+                color={darkMode ? "white" : "black"}
+              />
+            )}
+
             <a href="#" className="block py-2.5 px-4 hidden lg:block">
               Profile
             </a>

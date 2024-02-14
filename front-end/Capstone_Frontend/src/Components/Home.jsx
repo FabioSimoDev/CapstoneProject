@@ -12,10 +12,8 @@ const Home = () => {
   useEffect(() => {
     if (token) {
       dispatch(loadUserData(token));
-    } else {
-      console.log(token);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     console.log(userData);
