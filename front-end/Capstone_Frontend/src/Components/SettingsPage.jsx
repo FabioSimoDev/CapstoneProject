@@ -5,10 +5,12 @@ import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { useState } from "react";
 import menuItems from "../utils/menuItems";
 import appPreferencesMenuItems from "../utils/appPreferencesMenuItems";
+import SECTIONS_COMPONENTS from "../utils/sectionComponents";
 
 const SettinsPage = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
   const [selectedItemId, setSelectedItemId] = useState(menuItems[0].id);
+  const SectionComponent = SECTIONS_COMPONENTS[selectedItemId];
 
   const handleItemClick = (id) => {
     setSelectedItemId(id);
@@ -45,7 +47,7 @@ const SettinsPage = () => {
               {menuItems.map((item, index) => (
                 <li
                   key={index}
-                  className={`px-4 py-3 flex items-center gap-2 text-md dark:hover:bg-white/25 hover:bg-gray-200 rounded-lg transition duration-100 ${
+                  className={`px-4 py-3 flex items-center gap-2 text-md dark:hover:bg-white/25 hover:bg-gray-200 rounded-lg transition duration-100 cursor-pointer ${
                     selectedItemId === item.id
                       ? "dark:bg-white/10 bg-gray-100"
                       : ""
@@ -62,7 +64,7 @@ const SettinsPage = () => {
             {appPreferencesMenuItems.map((item, index) => (
               <li
                 key={index}
-                className={`px-4 py-3 flex items-center gap-2 text-md dark:hover:bg-white/25 hover:bg-gray-200 rounded-lg transition duration-100 ${
+                className={`px-4 py-3 flex items-center gap-2 text-md dark:hover:bg-white/25 hover:bg-gray-200 rounded-lg transition duration-100 cursor-pointer ${
                   selectedItemId === item.id
                     ? "dark:bg-white/10 bg-gray-100"
                     : ""
@@ -73,6 +75,10 @@ const SettinsPage = () => {
               </li>
             ))}
           </div>
+        </div>
+        {/* schermate... */}
+        <div className="max-w-[700px] w-full mx-auto py-9">
+          {SectionComponent && <SectionComponent />}
         </div>
       </div>
     </div>
