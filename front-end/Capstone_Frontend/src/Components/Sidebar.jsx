@@ -4,11 +4,13 @@ import { GoHomeFill } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import { setDarkMode } from "../Redux/actions/themeActions";
 import logo from "../assets/logo.png";
+import { useNavigate } from "react-router";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const darkMode = useSelector((state) => state.theme.darkMode);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.userData.data);
 
   return (
@@ -67,6 +69,7 @@ const Sidebar = () => {
           <div
             id="sidebar-settings-link-container"
             className="flex items-center justify-center lg:justify-start rounded transition duration-200 lg:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            onClick={() => navigate("/settings")}
           >
             <FiSettings
               size={24}
