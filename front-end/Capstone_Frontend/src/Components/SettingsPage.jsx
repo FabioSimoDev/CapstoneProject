@@ -1,64 +1,10 @@
 import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
 import { FiUser } from "react-icons/fi";
-import {
-  IoShieldCheckmarkOutline,
-  IoLockClosedOutline,
-  IoChatbubbleOutline
-} from "react-icons/io5";
-import { CgProfile } from "react-icons/cg";
+import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { useState } from "react";
-import { BiBlock } from "react-icons/bi";
-import { HiOutlineNewspaper } from "react-icons/hi2";
-import { FiShield } from "react-icons/fi";
-import { TbSunMoon } from "react-icons/tb";
-import { IoIosLogIn } from "react-icons/io";
-
-const menuItems = [
-  {
-    id: "modificaProfilo",
-    label: "Modifica profilo",
-    icon: <CgProfile size={24} />
-  },
-  {
-    id: "privacyAccount",
-    label: "Privacy dell'account",
-    icon: <IoLockClosedOutline size={24} />
-  },
-  {
-    id: "utentiBloccati",
-    label: "Utenti bloccati",
-    icon: <BiBlock size={24} />
-  },
-  {
-    id: "commentsSettings",
-    label: "Commenti",
-    icon: <IoChatbubbleOutline size={24} />
-  },
-  {
-    id: "personalInfo",
-    label: "Dettagli personali",
-    icon: <HiOutlineNewspaper size={24} />
-  },
-  {
-    id: "passwordAndSecurity",
-    label: "Password e sicurezza",
-    icon: <FiShield size={24} />
-  }
-];
-
-const appPreferencesMenuItems = [
-  {
-    id: "colorTheme",
-    label: "Tema colori",
-    icon: <TbSunMoon size={24} />
-  },
-  {
-    id: "rememberMe",
-    label: "Ricordami",
-    icon: <IoIosLogIn size={24} />
-  }
-];
+import menuItems from "../utils/menuItems";
+import appPreferencesMenuItems from "../utils/appPreferencesMenuItems";
 
 const SettinsPage = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
@@ -106,7 +52,7 @@ const SettinsPage = () => {
                   }`}
                   onClick={() => handleItemClick(item.id)}
                 >
-                  {item.icon} {item.label}
+                  {<item.icon size={24} />} {item.label}
                 </li>
               ))}
               <span className="dark:text-white/75 font-semibold text-sm px-4 py-2">
@@ -123,7 +69,7 @@ const SettinsPage = () => {
                 }`}
                 onClick={() => handleItemClick(item.id)}
               >
-                {item.icon} {item.label}
+                {<item.icon size={24} />} {item.label}
               </li>
             ))}
           </div>
