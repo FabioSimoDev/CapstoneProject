@@ -31,6 +31,7 @@ public class User implements UserDetails {
     private String phoneNumber;
     private String password;
     private LocalDateTime signUpDate;
+    private String biography;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts;
 
