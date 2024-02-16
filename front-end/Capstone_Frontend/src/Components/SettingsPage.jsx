@@ -77,7 +77,7 @@ const SettinsPage = () => {
           </div>
         </div>
         {/* schermate... */}
-        <div className="max-w-[700px] w-full mx-auto py-9">
+        <div className="max-w-[700px] w-full mx-auto py-9 flex flex-col gap-9">
           {SectionComponent && <SectionComponent />}
         </div>
       </div>
