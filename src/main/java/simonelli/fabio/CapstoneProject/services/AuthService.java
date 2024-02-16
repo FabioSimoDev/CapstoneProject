@@ -87,6 +87,11 @@ public class AuthService {
                 found.setPhoneNumber(body.phoneNumber());
             }
         }
+        if (body.biography() != null) {
+            if (!body.biography().isEmpty()) {
+                found.setBiography(body.biography());
+            }
+        }
         return usersDAO.save(found);
     }
 
