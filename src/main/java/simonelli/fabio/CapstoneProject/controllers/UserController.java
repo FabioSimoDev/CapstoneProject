@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import simonelli.fabio.CapstoneProject.entities.User;
 import simonelli.fabio.CapstoneProject.payloads.NewNoteRequestDTO;
 import simonelli.fabio.CapstoneProject.payloads.NoteRequestDTO;
@@ -17,6 +18,7 @@ import simonelli.fabio.CapstoneProject.exceptions.BadRequestException;
 import simonelli.fabio.CapstoneProject.services.AuthService;
 import simonelli.fabio.CapstoneProject.services.UsersService;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -56,6 +58,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCurrentClient(@AuthenticationPrincipal User currentUser) {
         usersService.deleteCurrentClient(currentUser);
+    }
+
+    @PostMapping("/me/upload")
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, @AuthenticationPrincipal User currentUser) throws IOException {
+        return usersService.uploadPicture(file, currentUser.getId());
     }
 
     @GetMapping("/me")
