@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { updateAvatar, updateUser } from "../Redux/actions/userProfileActions";
 
 const ModifyProfile = () => {
@@ -73,10 +73,7 @@ const ModifyProfile = () => {
           style={{ display: "none" }}
           ref={fileInputRef}
         />
-        <button
-          onClick={handleClick}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
-        >
+        <button onClick={handleClick} className="primary-button">
           Cambia foto
         </button>
       </div>
@@ -97,7 +94,7 @@ const ModifyProfile = () => {
       <p ref={errorDisplay}></p>
       <button
         onClick={handleSave}
-        className={`text-white font-semibold px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 ${
+        className={`primary-button ${
           detectedChanges
             ? "bg-indigo-500 hover:bg-indigo-600"
             : "bg-indigo-500/50 hover:bg-indigo-600/50"

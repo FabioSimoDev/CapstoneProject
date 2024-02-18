@@ -16,7 +16,7 @@ const Sidebar = () => {
   return (
     <div className={`flex md:flex-row flex-col ${darkMode ? "dark" : null}`}>
       <div
-        className={`dark:bg-black bg-white dark:text-white text-black border-t md:border-t-0 md:border-r dark:border-white/50 border:black/25 md:min-h-screen w-full md:w-20 xl:w-80 md:space-y-6 md:py-7 py-4 px-2 fixed inset-x-0 bottom-0 md:static md:h-full transform ${
+        className={`z-50 dark:bg-black bg-white dark:text-white text-black border-t md:border-t-0 md:border-r dark:border-white/50 border:black/25 md:min-h-screen w-full md:w-20 xl:w-80 md:space-y-6 md:py-7 py-4 px-2 fixed inset-x-0 bottom-0 md:static md:h-full transform ${
           isOpen ? "translate-y-0" : "translate-y-full"
         } md:translate-y-0 transition duration-200 ease-in-out flex items-center justify-evenly md:block`}
       >
@@ -34,6 +34,7 @@ const Sidebar = () => {
           <div
             id="sidebar-home-link-container"
             className="flex items-center justify-center xl:justify-start rounded transition duration-200 xl:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            onClick={() => navigate("/home")}
           >
             <GoHomeFill
               size={24}

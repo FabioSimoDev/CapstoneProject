@@ -80,7 +80,7 @@ const LoginPage = () => {
             <button
               type="submit"
               onClick={startLogin}
-              className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+              className="w-full primary-button"
             >
               Sign In
             </button>
