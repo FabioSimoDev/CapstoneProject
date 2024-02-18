@@ -10,7 +10,8 @@ export const USERS_DATA_ENDPOINT = {
 };
 
 export const USER_PROFILE_ENDPOINT = {
-  UPLOAD_AVATAR: "/users/me/upload"
+  UPLOAD_AVATAR: "/users/me/upload",
+  UPDATE_USER: "/users/me/updateProfile"
 };
 
 export const fetchApi = async (
@@ -23,13 +24,17 @@ export const fetchApi = async (
     const options = {
       method,
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer " + authenticationHeader
       }
     };
 
     if (method !== "GET") {
-      options.body = JSON.stringify(body);
+      if (endpoint !== USER_PROFILE_ENDPOINT.UPLOAD_AVATAR) {
+        options.headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(body);
+      } else {
+        options.body = body;
+      }
     }
 
     const response = await fetch(BASE_URL + endpoint, options);
@@ -40,6 +45,7 @@ export const fetchApi = async (
       throw response;
     }
   } catch (error) {
+    console.log(await error);
     throw await error.json();
   }
 };

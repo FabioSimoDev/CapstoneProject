@@ -63,7 +63,7 @@ public class UsersService {
         usersDAO.delete(user);
     }
 
-    public String uploadPicture(MultipartFile file, UUID userId) throws IOException
+    public User uploadPicture(MultipartFile file, UUID userId) throws IOException
     {
 
         String url = (String) cloudinaryUploader.uploader()
@@ -72,7 +72,7 @@ public class UsersService {
         User found = this.findById(userId);
         found.setAvatarURL(url);
         usersDAO.save(found);
-        return url;
+        return found;
     }
 
     public ReputationDTO getReputationFromUser(UUID userId){
