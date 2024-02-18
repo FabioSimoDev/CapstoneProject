@@ -20,20 +20,17 @@ const ModifyProfile = () => {
   };
 
   const handleSave = () => {
+    if (!detectedChanges) return;
     const biography = biographyRef.current.value;
-    if (!selectedFile) {
-      if (!biography) {
-        return;
-      }
+    if (!selectedFile && !biography) return null;
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("avatar", selectedFile);
+      dispatch(updateAvatar(token, formData));
     }
-    const formData = new FormData();
-    formData.append("avatar", selectedFile);
-    dispatch(updateAvatar(token, formData)).then(() => {
-      if (biography) {
-        dispatch(updateUser(token, { biography: biography }));
-      }
-    });
-    console.log("Dati pronti per essere inviati al backend:", formData);
+    if (biography) {
+      dispatch(updateUser(token, { biography: biography }));
+    }
   };
 
   const handleClick = () => {

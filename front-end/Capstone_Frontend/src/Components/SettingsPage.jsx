@@ -22,7 +22,7 @@ const SettinsPage = () => {
         className={`min-h-screen dark:bg-black bg-white dark:text-white text-black flex`}
       >
         <Sidebar />
-        <div className="w-72 overflow-y-auto h-svh px-4 py-8 border-r border-white/25 flex flex-col gap-6">
+        <div className="w-72 overflow-y-auto h-svh px-4 py-8 border-r border-white/25 flex flex-col shrink sm:shrink-0 gap-6">
           <p className="font-bold text-xl ps-2">Impostazioni</p>
           <div className="dark:bg-[#262626] dark:border-0 dark:shadow-none shadow border py-5 px-5 rounded-lg dark:hover:bg-white/25 hover:bg-gray-100 transition-colors">
             <p className="font-bold">Centro gestione account</p>
@@ -77,7 +77,7 @@ const SettinsPage = () => {
           </div>
         </div>
         {/* schermate... */}
-        <div className="max-w-[700px] w-full mx-auto py-9 flex flex-col gap-9">
+        <div className="max-w-[700px] w-full mx-auto py-9 flex flex-col min-w-0 gap-9 px-5">
           {SectionComponent && <SectionComponent />}
         </div>
       </div>

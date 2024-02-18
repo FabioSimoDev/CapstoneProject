@@ -1,7 +1,7 @@
 import { ActionTypes } from "../actions/themeActions";
 
 const initialState = {
-  darkMode: false
+  darkMode: localStorage.getItem("defaultTheme") === "dark"
 };
 
 const themeReducer = (state = initialState, action) => {
