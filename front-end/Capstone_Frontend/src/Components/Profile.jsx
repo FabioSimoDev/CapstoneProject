@@ -38,7 +38,7 @@ const Profile = () => {
     <div className={` ${darkMode ? "dark" : null}`}>
       <div className={`custom-base-container`}>
         <Sidebar />
-        <div className="max-w-[65rem] w-full mx-auto py-9">
+        <div className="max-w-[65rem] w-full mx-auto py-9 px-5">
           <div className="flex gap-24 mx-auto mb-14">
             <div className="w-[10rem] h-[10rem] shrink-0">
               <img
@@ -79,7 +79,7 @@ const Profile = () => {
                 selectedView !== "POST"
                   ? "dark:border-white/0 border-black/0"
                   : "border-black dark:border-white"
-              } border-t pt-1 flex items-center gap-1`}
+              } border-t pt-1 flex items-center gap-1 cursor-pointer`}
               onClick={() => setSelectedView("POST")}
             >
               <IoMdGrid size={16} />
@@ -90,7 +90,7 @@ const Profile = () => {
                 selectedView !== "SALVATI"
                   ? "dark:border-white/0 border-black/0"
                   : "border-black dark:border-white"
-              } border-t pt-1 flex items-center gap-1`}
+              } border-t pt-1 flex items-center gap-1 cursor-pointer`}
               onClick={() => setSelectedView("SALVATI")}
             >
               <CgBookmark size={16} />

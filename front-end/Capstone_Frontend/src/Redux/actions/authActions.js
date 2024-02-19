@@ -44,7 +44,9 @@ export const login = (credentials) => {
     dispatch(loginRequest(credentials));
     try {
       const data = await fetchApi(AUTH_ENDPOINTS.LOGIN, "POST", credentials);
-      localStorage.setItem("TOKEN", data.token);
+      if (localStorage.getItem("rememberAccess") === "true") {
+        localStorage.setItem("TOKEN", data.token);
+      }
       dispatch(loginSuccess(data.token));
     } catch (error) {
       dispatch(loginFailure(error.detail));
