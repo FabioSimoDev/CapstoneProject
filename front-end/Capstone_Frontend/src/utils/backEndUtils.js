@@ -14,6 +14,10 @@ export const USER_PROFILE_ENDPOINT = {
   UPDATE_USER: "/users/me/updateProfile"
 };
 
+export const POSTS_ENDPOINTS = {
+  GET_PERSONAL_POSTS: "/posts/me"
+};
+
 export const fetchApi = async (
   endpoint,
   method,

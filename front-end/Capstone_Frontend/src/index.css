@@ -21,4 +21,12 @@
   .primary-button {
     @apply text-white font-semibold px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 bg-indigo-500 hover:bg-indigo-600;
   }
+
+  .secondary-button {
+    @apply text-black dark:text-white font-semibold px-4 py-2 rounded-lg focus:outline-none focus:ring-2 bg-black/10 hover:bg-black/20 dark:bg-white/20 dark:hover:bg-white/15 text-sm;
+  }
+
+  .custom-base-container {
+    @apply min-h-screen dark:bg-black bg-white dark:text-white text-black flex;
+  }
 }

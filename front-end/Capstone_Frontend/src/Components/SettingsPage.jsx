@@ -27,9 +27,7 @@ const SettinsPage = () => {
 
   return (
     <div className={` ${darkMode ? "dark" : null}`}>
-      <div
-        className={`min-h-screen dark:bg-black bg-white dark:text-white text-black flex`}
-      >
+      <div className={`custom-base-container`}>
         <Sidebar />
         <div className="md:hidden absolute top-4 left-4 z-50">
           <FiMenu
@@ -41,7 +39,7 @@ const SettinsPage = () => {
         <div
           className={`fixed top-0 left-0 z-40 transform dark:bg-black ${
             isMenuOpen ? "translate-x-0" : "-translate-x-full"
-          } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:w-72 md: translate-x-0 overflow-y-auto h-svh px-4 py-8 border-r border-white/25 md:flex md:flex-col md:shrink-0 sm:shrink-0 gap-6`}
+          } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:w-72 md:translate-x-0 overflow-y-auto h-svh px-4 py-8 border-r border-white/25 md:flex md:flex-col md:shrink-0 sm:shrink-0 gap-6`}
         >
           <p className="font-bold text-xl ps-2">Impostazioni</p>
           <div className="dark:bg-[#262626] dark:border-0 dark:shadow-none shadow border py-5 px-5 rounded-lg dark:hover:bg-white/25 hover:bg-gray-100 transition-colors">

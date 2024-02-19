@@ -4,6 +4,7 @@ import SignUpPage from "./Components/SignUpPage";
 import Home from "./Components/Home";
 import UserContainer from "./Container-Components/UserContainer";
 import SettinsPage from "./Components/SettingsPage";
+import Profile from "./Components/Profile";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/settings" element={<SettinsPage />} />
+        <Route path="/profile/:userId" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );

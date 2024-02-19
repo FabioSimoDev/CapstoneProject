@@ -7,9 +7,7 @@ const Home = () => {
 
   return (
     <div className={` ${darkMode ? "dark" : null}`}>
-      <div
-        className={`min-h-screen dark:bg-black bg-white dark:text-white text-black flex `}
-      >
+      <div className={`custom-base-container `}>
         <Sidebar />
         <div className="p-8">
           <h1 className="text-4xl">Pagina Principale</h1>

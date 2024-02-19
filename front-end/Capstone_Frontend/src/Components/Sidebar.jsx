@@ -48,6 +48,7 @@ const Sidebar = () => {
           <div
             id="sidebar-profile-link-container"
             className="flex items-center justify-center xl:justify-start rounded transition duration-200 xl:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            onClick={() => navigate("/profile/me")}
           >
             {userData ? (
               <div className="w-[24px] h-[24px]">
