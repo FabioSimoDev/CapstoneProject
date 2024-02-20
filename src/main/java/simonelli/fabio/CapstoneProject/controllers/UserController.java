@@ -38,6 +38,11 @@ public class UserController {
         return usersService.getUsers(page, size, orderBy);
     }
 
+    @GetMapping("/{userId}")
+    public User getUserById(@PathVariable UUID userId){
+        return usersService.findById(userId);
+    }
+
     @PutMapping("/me/updateProfile")
     public User updateUser(@AuthenticationPrincipal User currentUser, @RequestBody @Validated UpdateExistingUserDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
