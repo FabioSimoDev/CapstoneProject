@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/me/upload")
-    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, @AuthenticationPrincipal User currentUser) throws IOException {
+    public User uploadAvatar(@RequestParam("avatar") MultipartFile file, @AuthenticationPrincipal User currentUser) throws IOException {
         return usersService.uploadPicture(file, currentUser.getId());
     }
 

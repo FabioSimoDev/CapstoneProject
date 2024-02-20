@@ -9,6 +9,16 @@ export const USERS_DATA_ENDPOINT = {
   PERSONAL_DATA: "/users/me"
 };
 
+export const USER_PROFILE_ENDPOINT = {
+  UPLOAD_AVATAR: "/users/me/upload",
+  UPDATE_USER: "/users/me/updateProfile"
+};
+
+export const POSTS_ENDPOINTS = {
+  GET_PERSONAL_POSTS: "/posts/me",
+  GET_ALL_POSTS: "/posts"
+};
+
 export const fetchApi = async (
   endpoint,
   method,
@@ -19,13 +29,17 @@ export const fetchApi = async (
     const options = {
       method,
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer " + authenticationHeader
       }
     };
 
     if (method !== "GET") {
-      options.body = JSON.stringify(body);
+      if (endpoint !== USER_PROFILE_ENDPOINT.UPLOAD_AVATAR) {
+        options.headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(body);
+      } else {
+        options.body = body;
+      }
     }
 
     const response = await fetch(BASE_URL + endpoint, options);
@@ -36,6 +50,7 @@ export const fetchApi = async (
       throw response;
     }
   } catch (error) {
+    console.log(await error);
     throw await error.json();
   }
 };

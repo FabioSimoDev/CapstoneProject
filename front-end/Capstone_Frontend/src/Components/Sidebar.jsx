@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMenu, FiX, FiUser, FiSettings, FiMoon, FiSun } from "react-icons/fi";
 import { GoHomeFill } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,12 +11,12 @@ const Sidebar = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userData = useSelector((state) => state.userData.data);
+  const currentUser = useSelector((state) => state.userData.currentUser);
 
   return (
     <div className={`flex md:flex-row flex-col ${darkMode ? "dark" : null}`}>
       <div
-        className={`dark:bg-black bg-white dark:text-white text-black border-t md:border-t-0 md:border-r dark:border-white/50 border:black/25 md:min-h-screen w-full md:w-20 lg:w-80 md:space-y-6 md:py-7 py-4 px-2 fixed inset-x-0 bottom-0 md:static md:h-full transform ${
+        className={`z-50 dark:bg-black bg-white dark:text-white text-black border-t md:border-t-0 md:border-r dark:border-white/50 border:black/25 md:min-h-screen w-full md:w-20 xl:w-80 md:space-y-6 md:py-7 py-4 px-2 fixed inset-x-0 bottom-0 md:static md:h-full transform ${
           isOpen ? "translate-y-0" : "translate-y-full"
         } md:translate-y-0 transition duration-200 ease-in-out flex items-center justify-evenly md:block`}
       >
@@ -25,35 +25,38 @@ const Sidebar = () => {
           className="dark:text-white text-black flex items-center space-x-2 px-4 hidden md:flex"
         >
           <img src={logo} alt="logo" width="30px" loading="lazy" />
-          <span className="text-2xl font-bold hidden lg:inline-block">
+          <span className="text-2xl font-bold hidden xl:inline-block">
             EduShare
           </span>
         </a>
 
-        <nav className="flex items-center justify-evenly w-full md:flex-col md:gap-5 md:justify-center lg:items-start my-0">
+        <nav className="flex items-center justify-evenly w-full md:flex-col md:gap-5 md:justify-center xl:items-start my-0">
           <div
             id="sidebar-home-link-container"
-            className="flex items-center justify-center lg:justify-start rounded transition duration-200 lg:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            className="flex items-center justify-center xl:justify-start rounded transition duration-200 xl:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            onClick={() => navigate("/home")}
           >
             <GoHomeFill
               size={24}
               className=""
               color={darkMode ? "white" : "black"}
             />
-            <a href="#" className="block py-2.5 px-4 hidden lg:block">
+            <a href="#" className="block py-2.5 px-4 hidden xl:block">
               Home
             </a>
           </div>
           <div
             id="sidebar-profile-link-container"
-            className="flex items-center justify-center lg:justify-start rounded transition duration-200 lg:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            className="flex items-center justify-center xl:justify-start rounded transition duration-200 xl:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            onClick={() => navigate("/profile/me")}
           >
-            {userData ? (
-              <img
-                width={24}
-                src={userData?.avatarURL}
-                className="rounded-full"
-              ></img>
+            {currentUser ? (
+              <div className="w-[24px] h-[24px]">
+                <img
+                  src={currentUser?.avatarURL}
+                  className="rounded-full w-full h-full object-cover"
+                ></img>
+              </div>
             ) : (
               <FiUser
                 size={24}
@@ -62,13 +65,13 @@ const Sidebar = () => {
               />
             )}
 
-            <a href="#" className="block py-2.5 px-4 hidden lg:block">
+            <a href="#" className="block py-2.5 px-4 hidden xl:block">
               Profile
             </a>
           </div>
           <div
             id="sidebar-settings-link-container"
-            className="flex items-center justify-center lg:justify-start rounded transition duration-200 lg:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            className="flex items-center justify-center xl:justify-start rounded transition duration-200 xl:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
             onClick={() => navigate("/settings")}
           >
             <FiSettings
@@ -76,7 +79,7 @@ const Sidebar = () => {
               className=""
               color={darkMode ? "white" : "black"}
             />
-            <a href="#" className="block py-2.5 px-4 hidden lg:block">
+            <a href="#" className="block py-2.5 px-4 hidden xl:block">
               Settings
             </a>
           </div>
@@ -84,10 +87,10 @@ const Sidebar = () => {
 
         <button
           onClick={() => dispatch(setDarkMode(!darkMode))}
-          className="lg:flex lg:mx-0 mx-auto items-center space-x-2 px-4 hidden"
+          className="xl:flex xl:mx-0 mx-auto items-center space-x-2 px-4 hidden"
         >
           {darkMode ? <FiSun size={24} /> : <FiMoon size={24} />}
-          <span className="hidden lg:block">
+          <span className="hidden xl:block">
             Switch to {darkMode ? "Light" : "Dark"} Mode
           </span>
         </button>
