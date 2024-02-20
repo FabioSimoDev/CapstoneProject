@@ -38,10 +38,14 @@ public class PostService {
     @Autowired
     HashtagsDAO hashtagsDAO;
 
-    public Page<Post> getAllPosts(int page, int size, String orderBy) {
+    public Page<PostResponseDTO> getAllPosts(int page, int size, String orderBy) {
         if (size >= 50) size = 50;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        return postsDAO.findAll(pageable);
+        Page<Post> postPage = postsDAO.findAll(pageable);
+        Page<PostResponseDTO> responseDTOPage = postPage.map(post -> {
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), post.getUser().getId());
+        } );
+        return responseDTOPage;
     }
 
     // in questo caso usare transactional è indifferente, viene gestito da Spring Data. lo tengo per abitudine e chiarezza del codice.

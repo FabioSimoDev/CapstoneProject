@@ -22,7 +22,7 @@ public class PostController {
     PostService postService;
 
     @GetMapping
-    public Page<Post> getAllPosts(
+    public Page<PostResponseDTO> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String orderBy) {
