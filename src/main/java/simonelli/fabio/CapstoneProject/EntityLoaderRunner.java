@@ -78,7 +78,7 @@ public class EntityLoaderRunner implements CommandLineRunner {
             newUser.setName(faker.name().name());
             newUser.setSurname(faker.name().lastName());
             newUser.setUsername(faker.name().username());
-            newUser.setAvatarURL(faker.internet().url());
+            newUser.setAvatarURL("https://ui-avatars.com/api/?name=" + newUser.getName() + "+" + newUser.getUsername());
             newUser.setPassword(bcrypt.encode("1234"));
             newUser.setPhoneNumber(faker.phoneNumber().phoneNumber());
             newUser.setRole(ROLE.USER);

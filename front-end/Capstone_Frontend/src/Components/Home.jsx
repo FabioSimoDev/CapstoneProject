@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { getAllPosts } from "../Redux/actions/postActions";
 import Post from "./Post";
 
@@ -26,11 +26,12 @@ const Home = () => {
         <div className="w-full h-screen overflow-y-auto">
           <div className="p-8 max-w-[900px] mx-auto flex flex-col items-center">
             <h1 className="text-4xl">Pagina Principale</h1>
-            {allPosts ? <h1>{allPosts.content[1].title}</h1> : null}
-            {console.log(allPosts.content[0].title)}
-            <div className="w-96">
-              {allPosts.content.map((post, index) => (
-                <Post key={index} post={allPosts.content[index]} />
+            <div className="w-96 flex flex-col gap-3">
+              {allPosts?.content?.map((post, index) => (
+                <Fragment key={index}>
+                  <Post post={post} />
+                  <div className="border-t pt-2 border-black/30 dark:border-white/10"></div>
+                </Fragment>
               ))}
             </div>
           </div>
