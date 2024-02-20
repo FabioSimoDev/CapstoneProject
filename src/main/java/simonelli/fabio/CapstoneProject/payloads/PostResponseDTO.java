@@ -8,5 +8,6 @@ public record PostResponseDTO(UUID id,
                               String content,
                               String image_url,
                               LocalDateTime publishDate,
+                              long likeCount,
                               UUID userId) {
 }
