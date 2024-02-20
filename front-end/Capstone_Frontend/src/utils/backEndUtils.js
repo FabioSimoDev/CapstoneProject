@@ -15,7 +15,8 @@ export const USER_PROFILE_ENDPOINT = {
 };
 
 export const POSTS_ENDPOINTS = {
-  GET_PERSONAL_POSTS: "/posts/me"
+  GET_PERSONAL_POSTS: "/posts/me",
+  GET_ALL_POSTS: "/posts"
 };
 
 export const fetchApi = async (

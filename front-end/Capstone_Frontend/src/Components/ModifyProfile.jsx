@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { updateAvatar, updateUser } from "../Redux/actions/userProfileActions";
 
 const ModifyProfile = () => {
-  const userData = useSelector((state) => state.userData.data);
+  const currentUser = useSelector((state) => state.userData.currentUser);
   const userDataError = useSelector((state) => state.userData.error);
   const [selectedFile, setSelectedFile] = useState(null);
   const [detectedChanges, setDetectedChanges] = useState(false);
@@ -44,7 +44,7 @@ const ModifyProfile = () => {
     } else return;
   };
 
-  if (!userData) {
+  if (!currentUser) {
     if (userDataError) {
       return <h1>{userDataError}</h1>;
     }
@@ -57,14 +57,14 @@ const ModifyProfile = () => {
         <div className="flex gap-3 items-center">
           <div className="w-[60px] h-[60px]">
             <img
-              src={userData.avatarURL}
+              src={currentUser.avatarURL}
               alt="avatar"
               className="rounded-full w-full h-full object-cover"
             />
           </div>
           <div>
-            <p>{userData.username}</p>
-            <p className="text-sm ps-1">{userData.name}</p>
+            <p>{currentUser.username}</p>
+            <p className="text-sm ps-1">{currentUser.name}</p>
           </div>
         </div>
         <input
@@ -86,7 +86,7 @@ const ModifyProfile = () => {
           maxLength={150}
           className="w-full overflow-y-auto rounded-xl dark:bg-black bg-white dark:border-white/25 dark:border border-2 p-3 outline-none text-lg"
           style={{ resize: "none" }}
-          placeholder={userData.biography ?? "Inserisci la biografia"}
+          placeholder={currentUser.biography ?? "Inserisci la biografia"}
           ref={biographyRef}
           onChange={detectChanges}
         ></textarea>

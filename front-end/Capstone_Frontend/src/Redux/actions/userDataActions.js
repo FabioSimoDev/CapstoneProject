@@ -3,7 +3,8 @@ import { USERS_DATA_ENDPOINT, fetchApi } from "../../utils/backEndUtils.js";
 export const ActionTypes = {
   LOAD_USER_DATA_REQUEST: "LOAD_USER_DATA_REQUEST",
   LOAD_USER_DATA_SUCCESS: "LOAD_USER_DATA_SUCCESS",
-  LOAD_USER_DATA_FAILURE: "LOAD_USER_DATA_FAILURE"
+  LOAD_USER_DATA_FAILURE: "LOAD_USER_DATA_FAILURE",
+  SET_CURRENT_USER: "SET_CURRENT_USER"
 };
 
 export const loadUserDataRequest = () => ({
@@ -20,6 +21,11 @@ export const loadUserDataFailure = (error) => ({
   payload: error
 });
 
+export const setCurrentUser = (userData) => ({
+  type: ActionTypes.SET_CURRENT_USER,
+  payload: userData
+});
+
 export const loadUserData = (token) => {
   return async (dispatch) => {
     dispatch(loadUserDataRequest());
@@ -33,6 +39,7 @@ export const loadUserData = (token) => {
       );
       console.log("tutto ok");
       dispatch(loadUserDataSuccess(data));
+      dispatch(setCurrentUser(data));
     } catch (error) {
       console.log("errore");
       //se error.status === 404 vuol dire che il token rappresenta uno user non presente nel DB.

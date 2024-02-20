@@ -11,7 +11,7 @@ const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [selectedView, setSelectedView] = useState("POST");
   const token = useSelector((state) => state.auth.token);
-  const personalData = useSelector((state) => state.userData.data);
+  const personalData = useSelector((state) => state.userData.currentUser);
   const posts = useSelector((state) => state.posts.posts);
   const { userId } = useParams();
   const dispatch = useDispatch();

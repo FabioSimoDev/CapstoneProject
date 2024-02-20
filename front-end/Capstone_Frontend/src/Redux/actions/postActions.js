@@ -39,3 +39,20 @@ export const getPersonalPosts = (token) => {
     }
   };
 };
+
+export const getAllPosts = (token) => {
+  return async (dispatch) => {
+    dispatch(getPostsRequest());
+    try {
+      const data = await fetchApi(
+        POSTS_ENDPOINTS.GET_ALL_POSTS,
+        "GET",
+        {},
+        token
+      );
+      dispatch(getPostSuccess(data));
+    } catch (error) {
+      dispatch(getPostFailure(error.detail));
+    }
+  };
+};

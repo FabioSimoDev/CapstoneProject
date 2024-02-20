@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMenu, FiX, FiUser, FiSettings, FiMoon, FiSun } from "react-icons/fi";
 import { GoHomeFill } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,7 @@ const Sidebar = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userData = useSelector((state) => state.userData.data);
+  const currentUser = useSelector((state) => state.userData.currentUser);
 
   return (
     <div className={`flex md:flex-row flex-col ${darkMode ? "dark" : null}`}>
@@ -50,10 +50,10 @@ const Sidebar = () => {
             className="flex items-center justify-center xl:justify-start rounded transition duration-200 xl:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
             onClick={() => navigate("/profile/me")}
           >
-            {userData ? (
+            {currentUser ? (
               <div className="w-[24px] h-[24px]">
                 <img
-                  src={userData?.avatarURL}
+                  src={currentUser?.avatarURL}
                   className="rounded-full w-full h-full object-cover"
                 ></img>
               </div>
