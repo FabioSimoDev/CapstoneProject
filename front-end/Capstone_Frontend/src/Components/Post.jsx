@@ -1,5 +1,16 @@
-const Post = (post) => {
-  alert(JSON.stringify(post));
+import { PropTypes } from "prop-types";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loadUserDataById } from "../Redux/actions/userDataActions";
+
+const Post = ({ post }) => {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  useEffect(() => {
+    if (post.userId) {
+      dispatch(loadUserDataById(token, post.userId));
+    }
+  }, []);
   return (
     <>
       <div className="flex flex-col">
@@ -12,7 +23,7 @@ const Post = (post) => {
             />
           </div>
           <div className="flex justify-between w-full">
-            <p>eminem</p>
+            <p>{post.title}</p>
             <p>...</p>
           </div>
         </div>
@@ -24,6 +35,10 @@ const Post = (post) => {
       </div>
     </>
   );
+};
+
+Post.propTypes = {
+  post: PropTypes.object
 };
 
 export default Post;

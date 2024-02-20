@@ -48,3 +48,24 @@ export const loadUserData = (token) => {
     }
   };
 };
+
+export const loadUserDataById = (token, id) => {
+  return async (dispatch) => {
+    dispatch(loadUserDataRequest());
+    console.log("inizio");
+    try {
+      const data = await fetchApi(
+        USERS_DATA_ENDPOINT.BY_ID_DATA + id,
+        "GET",
+        {},
+        token
+      );
+      console.log("tutto ok");
+      dispatch(loadUserDataSuccess(data));
+    } catch (error) {
+      console.log("errore");
+      dispatch(loadUserDataFailure(error.detail));
+      console.error(error.detail);
+    }
+  };
+};
