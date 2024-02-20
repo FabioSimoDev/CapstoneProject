@@ -6,7 +6,8 @@ export const AUTH_ENDPOINTS = {
 };
 
 export const USERS_DATA_ENDPOINT = {
-  PERSONAL_DATA: "/users/me"
+  PERSONAL_DATA: "/users/me",
+  BY_ID_DATA: "/users/"
 };
 
 export const USER_PROFILE_ENDPOINT = {

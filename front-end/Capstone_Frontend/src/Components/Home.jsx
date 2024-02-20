@@ -27,6 +27,7 @@ const Home = () => {
           <div className="p-8 max-w-[900px] mx-auto flex flex-col items-center">
             <h1 className="text-4xl">Pagina Principale</h1>
             {allPosts ? <h1>{allPosts.content[1].title}</h1> : null}
+            {console.log(allPosts.content[0].title)}
             <div className="w-96">
               {allPosts.content.map((post, index) => (
                 <Post key={index} post={allPosts.content[index]} />
