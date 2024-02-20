@@ -38,13 +38,16 @@ public class PostService {
     @Autowired
     HashtagsDAO hashtagsDAO;
 
+    @Autowired
+    LikeService likeService;
+
     public Page<PostResponseDTO> getAllPosts(int page, int size, String orderBy) {
         if (size >= 50) size = 50;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
         Page<Post> postPage = postsDAO.findAll(pageable);
         Page<PostResponseDTO> responseDTOPage = postPage.map(post -> {
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), post.getUser().getId());
-        } );
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), post.getUser().getId());
+        });
         return responseDTOPage;
     }
 
@@ -62,12 +65,12 @@ public class PostService {
         usersDAO.save(user);
         // il Post verrà salvato automaticamente per via del CascadeType.ALL
 
-        return new PostResponseDTO(newPost.getId(), newPost.getTitle(), newPost.getContent(), newPost.getImageURL(), newPost.getPublishDate(), newPost.getUser().getId());
+        return new PostResponseDTO(newPost.getId(), newPost.getTitle(), newPost.getContent(), newPost.getImageURL(), newPost.getPublishDate(), likeService.getPostLikesCount(newPost.getId()), newPost.getUser().getId());
     }
 
     public PostResponseDTO findById(UUID id) {
         Post found = postsDAO.findById(id).orElseThrow(() -> new NotFoundException("Post con ID " + id + " non trovato."));
-        return new PostResponseDTO(id, found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
+        return new PostResponseDTO(id, found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), found.getUser().getId());
     }
 
     public Post findPostById(UUID id) {
@@ -99,35 +102,35 @@ public class PostService {
             throw new BadRequestException("Il payload non può essere vuoto!");
         }
         postsDAO.save(found);
-        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
+        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), found.getUser().getId());
     }
 
-    public List<PostResponseDTO> findByUser(User user){
+    public List<PostResponseDTO> findByUser(User user) {
         List<PostResponseDTO> postResponseDTOS = postsDAO.findByUser(user).stream().map(post -> {
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), post.getUser().getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), post.getUser().getId());
         }).toList();
 
         return postResponseDTOS;
     }
 
     @Transactional
-    public PostResponseDTO addHashtagToPost(UUID postId, String hashtag){
+    public PostResponseDTO addHashtagToPost(UUID postId, String hashtag) {
         Post found = this.findPostById(postId);
         NewHastagDTO newHastagDTO = new NewHastagDTO(hashtag);
         UUID newHashtagId = hashtagService.saveHashtag(newHastagDTO).id();
         Hashtag newHashtag = hashtagsDAO.findById(newHashtagId).get();
         found.addHashtag(newHashtag);
         postsDAO.save(found);
-        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
+        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), found.getUser().getId());
     }
 
     @Transactional
-    public PostResponseDTO removeHashtagFromPost(UUID postId, String hashtag){
+    public PostResponseDTO removeHashtagFromPost(UUID postId, String hashtag) {
         Post found = this.findPostById(postId);
         NewHastagDTO newHastagDTO = new NewHastagDTO(hashtag);
         UUID newHashtagId = hashtagService.saveHashtag(newHastagDTO).id();
         Hashtag newHashtag = hashtagsDAO.findById(newHashtagId).get();
         found.removeHashtag(newHashtag);
-        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), found.getUser().getId());
+        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), found.getUser().getId());
     }
 }

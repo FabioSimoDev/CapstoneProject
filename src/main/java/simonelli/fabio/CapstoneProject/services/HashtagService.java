@@ -25,6 +25,8 @@ public class HashtagService {
     private HashtagsDAO hashtagsDAO;
     @Autowired
     private PostsDAO postsDAO;
+    @Autowired
+    LikeService likeService;
 
     public Set<HashtagResponseDTO> findAllHashtags(){
         return new HashSet<>(hashtagsDAO.findAll().stream().map((hashtag)->{
@@ -49,7 +51,7 @@ public class HashtagService {
         Page<Post> postsPage = postsDAO.findByHashtags_HashtagText(hashtag, pageable);
 
         Page<PostResponseDTO> responseDTOPage = postsPage.map(post -> {
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), post.getUser().getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), post.getUser().getId());
         });
         return responseDTOPage;
     }

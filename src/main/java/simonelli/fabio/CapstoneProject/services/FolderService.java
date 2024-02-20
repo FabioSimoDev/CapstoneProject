@@ -34,6 +34,9 @@ public class FolderService {
     @Autowired
     PostsDAO postsDAO;
 
+    @Autowired
+    LikeService likeService;
+
     public Page<FolderDTO> getAllFolders(int page, int size, String orderBy) {
         if (size >= 50) size = 50;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
@@ -85,7 +88,7 @@ public class FolderService {
         Folder found = folderDAO.findById(id).orElseThrow(() -> new NotFoundException("Cartella con id " + id + " non trovata"));
         Pageable pageable = PageRequest.of(page, size);
         Page<Post> postPage = this.getPostsInFolder(found.getId(), pageable);
-        Page<PostResponseDTO> postResponseDTOSPage = postPage.map(post -> new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), post.getUser().getId()));
+        Page<PostResponseDTO> postResponseDTOSPage = postPage.map(post -> new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), post.getUser().getId()));
         return returnFolderWithPostsDTO(found, postResponseDTOSPage);
     }
 
