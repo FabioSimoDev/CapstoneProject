@@ -23,10 +23,11 @@ public class PostController {
 
     @GetMapping
     public Page<PostResponseDTO> getAllPosts(
+            @AuthenticationPrincipal User currentUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String orderBy) {
-        return postService.getAllPosts(page, size, orderBy);
+        return postService.getAllPosts(currentUser, page, size, orderBy);
     }
 
     @PostMapping
@@ -42,14 +43,14 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public PostResponseDTO getPostById(@PathVariable UUID postId){
-        return postService.findById(postId);
+    public PostResponseDTO getPostById(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId){
+        return postService.findById(currentUser, postId);
     }
 
     @PutMapping("/{postId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public PostResponseDTO getPostByIdAndUpdate(@PathVariable UUID postId, @RequestBody UpdateExistingPostDTO body){
-        return postService.findByIdAndUpdate(postId, body);
+    public PostResponseDTO getPostByIdAndUpdate(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId, @RequestBody UpdateExistingPostDTO body){
+        return postService.findByIdAndUpdate(currentUser, postId, body);
     }
 
     @GetMapping("/me")
@@ -59,14 +60,14 @@ public class PostController {
 
     @PostMapping("/{postId}/addHashtag/{hashtagText}")
     @ResponseStatus(HttpStatus.CREATED)
-    public PostResponseDTO addHashtagToPost(@PathVariable UUID postId, @PathVariable String hashtagText){
-        return postService.addHashtagToPost(postId, hashtagText);
+    public PostResponseDTO addHashtagToPost(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId, @PathVariable String hashtagText){
+        return postService.addHashtagToPost(currentUser, postId, hashtagText);
     }
 
     @DeleteMapping("/{postId}/removeHashtag/{hashtagText}")
     @ResponseStatus(HttpStatus.OK)
-    public PostResponseDTO removeHashtagFromPost(@PathVariable UUID postId, @PathVariable String hashtagText){
-        return postService.removeHashtagFromPost(postId, hashtagText);
+    public PostResponseDTO removeHashtagFromPost(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId, @PathVariable String hashtagText){
+        return postService.removeHashtagFromPost(currentUser, postId, hashtagText);
     }
 
 

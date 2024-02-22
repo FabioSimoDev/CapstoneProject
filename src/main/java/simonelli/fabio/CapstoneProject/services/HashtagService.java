@@ -8,9 +8,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import simonelli.fabio.CapstoneProject.entities.Hashtag;
 import simonelli.fabio.CapstoneProject.entities.Post;
+import simonelli.fabio.CapstoneProject.entities.User;
 import simonelli.fabio.CapstoneProject.payloads.HashtagResponseDTO;
 import simonelli.fabio.CapstoneProject.payloads.NewHastagDTO;
 import simonelli.fabio.CapstoneProject.payloads.PostResponseDTO;
+import simonelli.fabio.CapstoneProject.payloads.PostUserDataResponseDTO;
 import simonelli.fabio.CapstoneProject.repositories.HashtagsDAO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 
@@ -45,13 +47,15 @@ public class HashtagService {
         return new HashtagResponseDTO(found.get().getId(), found.get().getHashtagText());
     }
 
-    public Page<PostResponseDTO> findPostsByHashtag(String hashtag, int page, int size, String orderBy) {
+    public Page<PostResponseDTO> findPostsByHashtag(User user, String hashtag, int page, int size, String orderBy) {
         if(size > 30) size=30;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
         Page<Post> postsPage = postsDAO.findByHashtags_HashtagText(hashtag, pageable);
 
         Page<PostResponseDTO> responseDTOPage = postsPage.map(post -> {
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), post.getUser().getId());
+            PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
+            boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, postUserDataResponseDTO);
         });
         return responseDTOPage;
     }

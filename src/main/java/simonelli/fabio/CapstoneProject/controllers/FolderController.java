@@ -37,8 +37,8 @@ public class FolderController {
     }
 
     @GetMapping("/{folderId}")
-    public FolderWithPostsDTO getFolderById(@PathVariable UUID folderId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
-        return folderService.findById(folderId, page, size);
+    public FolderWithPostsDTO getFolderById(@AuthenticationPrincipal User currentUser, @PathVariable UUID folderId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+        return folderService.findById(currentUser, folderId, page, size);
     }
 
     @PostMapping
