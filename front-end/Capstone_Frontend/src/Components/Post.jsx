@@ -2,15 +2,30 @@ import { PropTypes } from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUserDataById } from "../Redux/actions/userDataActions";
+import { FaRegHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa6";
+import { calculateDistanceToNow } from "../utils/dateUtils";
+import {
+  checkUserLikedPost,
+  removeLike,
+  setLike
+} from "../Redux/actions/likeAction";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const usersData = useSelector((state) => state.userData.data);
   const [postOwner, setPostOwner] = useState(null);
+  const [isPostLiked, setIsPostLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(post.likeCount);
+
+  const timePassed = calculateDistanceToNow(post.publishDate);
 
   useEffect(() => {
-    if (usersData) {
+    //se usersData è null vuol dire che non sono ancora neanche stati caricati i dati dell'utente loggato. a questo punto, questo componente post non dovrebbe
+    //neanche essere montato.
+    //TODO: implementa e migliora il caricamento dei vari componenti per evitare problemi di questo tipo.
+    if (!postOwner && usersData) {
       setPostOwner(usersData[post.userId]);
     }
   }, [usersData]);
@@ -18,8 +33,24 @@ const Post = ({ post }) => {
   useEffect(() => {
     if (post.userId) {
       dispatch(loadUserDataById(token, post.userId));
+      //TODO: non ha molto senso creare un reducer per i like.. valutare meglio la cosa
+      dispatch(checkUserLikedPost(token, post.id)).then((liked) => {
+        setIsPostLiked(liked);
+      });
     }
-  }, []);
+  }, [post.userId]);
+
+  const handleLike = () => {
+    setIsPostLiked(!isPostLiked);
+    if (!isPostLiked) {
+      dispatch(setLike(token, post.id));
+      setLikeCount((prev) => prev + 1);
+    } else {
+      dispatch(removeLike(token, post.id));
+      setLikeCount((prev) => prev - 1);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-3">
@@ -32,7 +63,10 @@ const Post = ({ post }) => {
             />
           </div>
           <div className="flex justify-between w-full">
-            <p>{postOwner?.name}</p>
+            <div className="flex gap-2">
+              <p>{postOwner?.name}</p>
+              <p className="opacity-50">• {timePassed}</p>
+            </div>
             <button aria-label="Impostazioni post">...</button>
           </div>
         </div>
@@ -41,6 +75,28 @@ const Post = ({ post }) => {
           alt="foto"
           className="border border-white/20 rounded-md"
         />
+        <div className="flex flex-col gap-2">
+          <div role="button" onClick={handleLike}>
+            {isPostLiked ? (
+              <FaHeart size={24} color="red" className="animate-jump" />
+            ) : (
+              <FaRegHeart size={24} role="button" />
+            )}
+          </div>
+
+          {post.likeCount > 0 && (
+            <small className="text-sm">
+              Piace a <span className="font-semibold">{likeCount} persone</span>
+            </small>
+          )}
+          <small>
+            <span className="font-semibold">{postOwner?.username}:</span>{" "}
+            {post.content}
+          </small>
+          <small className="opacity-50 text-[0.900rem] font-medium">
+            Mostra tutti e - commenti
+          </small>
+        </div>
       </div>
     </>
   );

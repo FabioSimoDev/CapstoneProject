@@ -101,6 +101,10 @@ public class User implements UserDetails {
         this.likes.add(like);
     }
 
+    public void removeLike(Like like){
+        this.likes.remove(like);
+    }
+
     public void addComment(Comment comment) {
         this.comments.add(comment);
     }

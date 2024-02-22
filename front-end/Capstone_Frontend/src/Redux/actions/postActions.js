@@ -33,7 +33,6 @@ export const getPersonalPosts = (token) => {
       dispatch(getPostSuccess(data));
     } catch (error) {
       console.log("errore");
-      //se error.status === 404 vuol dire che il token rappresenta uno user non presente nel DB.
       dispatch(getPostFailure(error.detail));
       console.error(error.detail);
     }

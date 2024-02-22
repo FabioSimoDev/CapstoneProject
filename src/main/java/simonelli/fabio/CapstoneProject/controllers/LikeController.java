@@ -50,4 +50,9 @@ public class LikeController {
     public String addLike(@AuthenticationPrincipal User currentUser, @RequestParam UUID postId) {
         return likeService.addLike(currentUser.getId(), postId);
     }
+
+    @DeleteMapping("remove")
+    public void removeLike(@AuthenticationPrincipal User currentUser, @RequestParam UUID postId){
+        likeService.removeLike(currentUser.getId(), postId);
+    }
 }
