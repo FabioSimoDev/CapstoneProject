@@ -9,5 +9,6 @@ public record PostResponseDTO(UUID id,
                               String image_url,
                               LocalDateTime publishDate,
                               long likeCount,
-                              UUID userId) {
+                              boolean isLiked,
+                              PostUserDataResponseDTO creatorData) {
 }

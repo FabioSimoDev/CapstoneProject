@@ -12,10 +12,7 @@ import simonelli.fabio.CapstoneProject.entities.Post;
 import simonelli.fabio.CapstoneProject.entities.User;
 import simonelli.fabio.CapstoneProject.exceptions.NotFoundException;
 import simonelli.fabio.CapstoneProject.exceptions.UnauthorizedException;
-import simonelli.fabio.CapstoneProject.payloads.FolderDTO;
-import simonelli.fabio.CapstoneProject.payloads.FolderWithPostsDTO;
-import simonelli.fabio.CapstoneProject.payloads.NewFolderDTO;
-import simonelli.fabio.CapstoneProject.payloads.PostResponseDTO;
+import simonelli.fabio.CapstoneProject.payloads.*;
 import simonelli.fabio.CapstoneProject.repositories.FolderDAO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 
@@ -81,14 +78,18 @@ public class FolderService {
         folderFound.addPost(postFound);
         postFound.addFolder(folderFound);
         folderDAO.save(folderFound);
-        return this.findById(folderFound.getId(), page, size);
+        return this.findById(authenticatedUser, folderFound.getId(), page, size);
     }
 
-    public FolderWithPostsDTO findById(UUID id, int page, int size) {
+    public FolderWithPostsDTO findById(User user, UUID id, int page, int size) {
         Folder found = folderDAO.findById(id).orElseThrow(() -> new NotFoundException("Cartella con id " + id + " non trovata"));
         Pageable pageable = PageRequest.of(page, size);
         Page<Post> postPage = this.getPostsInFolder(found.getId(), pageable);
-        Page<PostResponseDTO> postResponseDTOSPage = postPage.map(post -> new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), post.getUser().getId()));
+        Page<PostResponseDTO> postResponseDTOSPage = postPage.map(post -> {
+            PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
+            boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, postUserDataResponseDTO);
+        });
         return returnFolderWithPostsDTO(found, postResponseDTOSPage);
     }
 
