@@ -27,7 +27,7 @@ public class Post {
     @ManyToOne
     private User user;
     @JsonIgnore
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Like> likes;
     @JsonIgnore
     @OneToMany(mappedBy = "post")

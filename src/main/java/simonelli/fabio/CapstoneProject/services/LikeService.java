@@ -51,6 +51,10 @@ public class LikeService {
         return likesDAO.existsByUserIdAndPostId(userId, postId);
     }
 
+    public Like findByUserAndPost(UUID userId, UUID postId){
+        return likesDAO.findByUserIdAndPostId(userId, postId);
+    }
+
     public long getPostLikesCount(UUID postId) {
         return likesDAO.countByPostId(postId);
     }
@@ -80,5 +84,19 @@ public class LikeService {
         //salvo lo user, che grazie a CascadeType.ALL salva anche il post e il like.
         usersDAO.save(user);
         return "Mi piace aggiungo con successo";
+    }
+
+    @Transactional
+    public void removeLike(UUID userId, UUID postId) {
+        if (!existsByUserAndPost(userId, postId)) {
+            throw new BadRequestException("L'utente non ha messo mi piace a questo post!");
+        }
+        Like like = findByUserAndPost(userId, postId);
+        likesDAO.delete(like);
+        //ottengo l'utente
+//        User user = usersService.findById(userId);
+//        user.removeLike(like);
+//        //salvo lo user, che grazie a CascadeType.ALL salva anche il post e il like.
+//        usersDAO.save(user);
     }
 }

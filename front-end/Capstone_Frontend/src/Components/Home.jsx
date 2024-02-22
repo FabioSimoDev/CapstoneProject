@@ -26,7 +26,7 @@ const Home = () => {
         <div className="w-full h-screen overflow-y-auto">
           <div className="p-8 max-w-[900px] mx-auto flex flex-col items-center">
             <h1 className="text-4xl">Pagina Principale</h1>
-            <div className="w-96 flex flex-col gap-3">
+            <div className="w-[28rem] flex flex-col gap-3">
               {allPosts?.content?.map((post, index) => (
                 <Fragment key={index}>
                   <Post post={post} />

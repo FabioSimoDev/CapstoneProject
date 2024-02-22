@@ -15,4 +15,6 @@ public interface LikesDAO extends JpaRepository<Like, UUID> {
     public boolean existsByUserIdAndPostId(UUID userId, UUID postId);
 
     public long countByPostId(UUID postId);
+
+    public Like findByUserIdAndPostId(UUID userId, UUID postId);
 }
