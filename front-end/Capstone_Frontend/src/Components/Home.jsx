@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import { Fragment, useEffect } from "react";
 import { getAllPosts } from "../Redux/actions/postActions";
 import Post from "./Post";
+import Modal from "./Modal/Modal";
 
 const Home = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
