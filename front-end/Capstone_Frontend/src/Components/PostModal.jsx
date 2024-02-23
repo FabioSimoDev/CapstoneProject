@@ -40,7 +40,7 @@ const PostModal = ({
               <small className="font-bold">{postOwner?.username}</small>
             </div>
           </div>
-          <div className="h-[75%] overflow-y-auto">
+          <div className="h-[75%] overflow-y-auto space-y-4 pt-2">
             {comments.isLoading ? (
               <span>Loading comments...</span>
             ) : comments.error ? (

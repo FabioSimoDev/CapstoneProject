@@ -2,7 +2,8 @@ import { COMMENTS_ENDPOINT, fetchApi } from "../../utils/backEndUtils";
 
 export const ActionTypes = {
   COMMENTS_REQUEST: "COMMENTS_REQUEST",
-  COMMENTS_SUCCESS: "COMMENTS_SUCCESS",
+  GET_COMMENTS_SUCCESS: "GET_COMMENTS_SUCCESS",
+  ADD_COMMENT_SUCCESS: "ADD_COMMENT_SUCCESS",
   COMMENTS_FAILURE: "COMMENTS_FAILURE"
 };
 
@@ -11,8 +12,13 @@ export const commentsRequest = () => ({
 });
 
 export const commentsSuccess = (comments) => ({
-  type: ActionTypes.COMMENTS_SUCCESS,
+  type: ActionTypes.GET_COMMENTS_SUCCESS,
   payload: comments
+});
+
+export const addCommentSuccess = (newComment) => ({
+  type: ActionTypes.ADD_COMMENT_SUCCESS,
+  payload: newComment
 });
 
 export const commentsFailure = (error) => ({
@@ -49,7 +55,7 @@ export const createComment = (token, postId, commentText) => {
         { content: commentText },
         token
       );
-      dispatch(commentsSuccess(data));
+      dispatch(addCommentSuccess(data));
     } catch (error) {
       console.log("errore");
       dispatch(commentsFailure(error.detail));

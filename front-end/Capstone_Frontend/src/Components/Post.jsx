@@ -1,16 +1,10 @@
 import { PropTypes } from "prop-types";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadUserDataById } from "../Redux/actions/userDataActions";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
+import { IoChatbubbleOutline } from "react-icons/io5";
 import { calculateDistanceToNow } from "../utils/dateUtils";
-import {
-  checkUserLikedPost,
-  removeLike,
-  setLike
-} from "../Redux/actions/likeAction";
-import Modal from "./Modal/Modal";
 import {
   createComment,
   getPostComments
@@ -22,7 +16,7 @@ import usePostLike from "../hooks/usePostLike";
 const Post = ({ post }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const usersData = useSelector((state) => state.userData.data);
+  // const usersData = useSelector((state) => state.userData.data);
   const { postOwner } = usePostOwner(post.creatorData);
   const { isPostLiked, likeCount, handleLike } = usePostLike(post, token);
   const [postModalOpen, setPostModalOpen] = useState(false);
@@ -31,32 +25,9 @@ const Post = ({ post }) => {
 
   const timePassed = calculateDistanceToNow(post.publishDate);
 
-  // useEffect(() => {
-  //   //se usersData è null vuol dire che non sono ancora neanche stati caricati i dati dell'utente loggato. a questo punto, questo componente post non dovrebbe
-  //   //neanche essere montato.
-  //   //TODO: implementa e migliora il caricamento dei vari componenti per evitare problemi di questo tipo.
-  //   // if (!postOwner && usersData) {
-  //   //   setPostOwner(usersData[post.creatorData.userId]);
-  //   // }
-  //   setPostOwner(post.creatorData);
-  // }, [usersData]);
-
-  // useEffect(() => {
-  //   if (post.creatorData) {
-  //     setIsPostLiked(post.isLiked);
-  //   }
-  // }, [post.creatorData]);
-
-  // const handleLike = () => {
-  //   setIsPostLiked(!isPostLiked);
-  //   if (!isPostLiked) {
-  //     dispatch(setLike(token, post.id));
-  //     setLikeCount((prev) => prev + 1);
-  //   } else {
-  //     dispatch(removeLike(token, post.id));
-  //     setLikeCount((prev) => prev - 1);
-  //   }
-  // };
+  //se usersData è null vuol dire che non sono ancora neanche stati caricati i dati dell'utente loggato. a questo punto, questo componente post non dovrebbe
+  //neanche essere montato.
+  //TODO: implementa e migliora il caricamento dei vari componenti per evitare problemi di questo tipo.
 
   const openModal = () => {
     setPostModalOpen(true);
@@ -109,12 +80,18 @@ const Post = ({ post }) => {
           className="border border-white/20 rounded-md"
         />
         <div className="flex flex-col gap-2">
-          <div role="button" onClick={handleLike}>
+          <div role="button" className="flex gap-3 w-min">
             {isPostLiked ? (
-              <FaHeart size={24} color="red" className="animate-jump" />
+              <FaHeart
+                size={24}
+                color="red"
+                className="animate-jump"
+                onClick={handleLike}
+              />
             ) : (
-              <FaRegHeart size={24} role="button" />
+              <FaRegHeart size={24} role="button" onClick={handleLike} />
             )}
+            <IoChatbubbleOutline size={24} onClick={openModal} />
           </div>
 
           {post.likeCount > 0 && (
@@ -130,7 +107,9 @@ const Post = ({ post }) => {
             className="opacity-50 text-[0.900rem] font-medium"
             onClick={openModal}
           >
-            Mostra tutti e - commenti
+            {post.totalComments
+              ? `Mostra tutti e ${post.totalComments} commenti`
+              : null}
           </small>
         </div>
       </div>
