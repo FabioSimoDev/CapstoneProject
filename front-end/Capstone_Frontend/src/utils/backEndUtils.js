@@ -26,6 +26,11 @@ export const LIKES_ENDPOINTS = {
   REMOVE_LIKE: "/likes/remove"
 };
 
+export const COMMENTS_ENDPOINT = {
+  GET_POST_COMMENTS: "/comments/",
+  CREATE_COMMENT: "/comments/create"
+};
+
 export const fetchApi = async (
   endpoint,
   method,

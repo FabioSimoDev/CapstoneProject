@@ -1,5 +1,5 @@
 import { PropTypes } from "prop-types";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUserDataById } from "../Redux/actions/userDataActions";
 import { FaRegHeart } from "react-icons/fa";
@@ -10,49 +10,82 @@ import {
   removeLike,
   setLike
 } from "../Redux/actions/likeAction";
+import Modal from "./Modal/Modal";
+import {
+  createComment,
+  getPostComments
+} from "../Redux/actions/commentActions";
+import PostModal from "./PostModal";
+import usePostOwner from "../hooks/usePostOwner";
+import usePostLike from "../hooks/usePostLike";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const usersData = useSelector((state) => state.userData.data);
-  const [postOwner, setPostOwner] = useState(null);
-  const [isPostLiked, setIsPostLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(post.likeCount);
+  const { postOwner } = usePostOwner(post.creatorData);
+  const { isPostLiked, likeCount, handleLike } = usePostLike(post, token);
+  const [postModalOpen, setPostModalOpen] = useState(false);
+  const comments = useSelector((state) => state.comments);
+  const newCommentInput = useRef();
 
   const timePassed = calculateDistanceToNow(post.publishDate);
 
-  useEffect(() => {
-    //se usersData è null vuol dire che non sono ancora neanche stati caricati i dati dell'utente loggato. a questo punto, questo componente post non dovrebbe
-    //neanche essere montato.
-    //TODO: implementa e migliora il caricamento dei vari componenti per evitare problemi di questo tipo.
-    if (!postOwner && usersData) {
-      setPostOwner(usersData[post.userId]);
-    }
-  }, [usersData]);
+  // useEffect(() => {
+  //   //se usersData è null vuol dire che non sono ancora neanche stati caricati i dati dell'utente loggato. a questo punto, questo componente post non dovrebbe
+  //   //neanche essere montato.
+  //   //TODO: implementa e migliora il caricamento dei vari componenti per evitare problemi di questo tipo.
+  //   // if (!postOwner && usersData) {
+  //   //   setPostOwner(usersData[post.creatorData.userId]);
+  //   // }
+  //   setPostOwner(post.creatorData);
+  // }, [usersData]);
 
-  useEffect(() => {
-    if (post.userId) {
-      dispatch(loadUserDataById(token, post.userId));
-      //TODO: non ha molto senso creare un reducer per i like.. valutare meglio la cosa
-      dispatch(checkUserLikedPost(token, post.id)).then((liked) => {
-        setIsPostLiked(liked);
-      });
-    }
-  }, [post.userId]);
+  // useEffect(() => {
+  //   if (post.creatorData) {
+  //     setIsPostLiked(post.isLiked);
+  //   }
+  // }, [post.creatorData]);
 
-  const handleLike = () => {
-    setIsPostLiked(!isPostLiked);
-    if (!isPostLiked) {
-      dispatch(setLike(token, post.id));
-      setLikeCount((prev) => prev + 1);
-    } else {
-      dispatch(removeLike(token, post.id));
-      setLikeCount((prev) => prev - 1);
+  // const handleLike = () => {
+  //   setIsPostLiked(!isPostLiked);
+  //   if (!isPostLiked) {
+  //     dispatch(setLike(token, post.id));
+  //     setLikeCount((prev) => prev + 1);
+  //   } else {
+  //     dispatch(removeLike(token, post.id));
+  //     setLikeCount((prev) => prev - 1);
+  //   }
+  // };
+
+  const openModal = () => {
+    setPostModalOpen(true);
+    dispatch(getPostComments(token, post.id));
+  };
+
+  const publishComment = () => {
+    if (newCommentInput.current.value) {
+      dispatch(createComment(token, post.id, newCommentInput.current.value));
     }
   };
 
   return (
     <>
+      {
+        <PostModal
+          isOpen={postModalOpen}
+          onClose={() => setPostModalOpen(false)}
+          post={post}
+          postOwner={postOwner}
+          comments={comments}
+          isPostLiked={isPostLiked}
+          timePassed={timePassed}
+          likeCount={likeCount}
+          handleLike={handleLike}
+          publishComment={publishComment}
+          newCommentInput={newCommentInput}
+        />
+      }
       <div className="flex flex-col gap-3">
         <div className="flex gap-3 items-center">
           <div className="w-[30px] h-[30px] shrink-0">
@@ -64,7 +97,7 @@ const Post = ({ post }) => {
           </div>
           <div className="flex justify-between w-full">
             <div className="flex gap-2">
-              <p>{postOwner?.name}</p>
+              <p>{postOwner?.username}</p>
               <p className="opacity-50">• {timePassed}</p>
             </div>
             <button aria-label="Impostazioni post">...</button>
@@ -93,7 +126,10 @@ const Post = ({ post }) => {
             <span className="font-semibold">{postOwner?.username}:</span>{" "}
             {post.content}
           </small>
-          <small className="opacity-50 text-[0.900rem] font-medium">
+          <small
+            className="opacity-50 text-[0.900rem] font-medium"
+            onClick={openModal}
+          >
             Mostra tutti e - commenti
           </small>
         </div>
