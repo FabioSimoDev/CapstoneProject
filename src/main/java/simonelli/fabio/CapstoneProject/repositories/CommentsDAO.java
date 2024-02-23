@@ -15,4 +15,5 @@ public interface CommentsDAO extends JpaRepository<Comment, UUID> {
     public Page<Comment> findByUser(User user, Pageable pageable);
     public Page<Comment> findByPostId(UUID postId, Pageable pageable);
     public Page<Comment> findByUserAndPostId(User user, UUID postId, Pageable pageable);
+    public long countByPostId(UUID postId);
 }

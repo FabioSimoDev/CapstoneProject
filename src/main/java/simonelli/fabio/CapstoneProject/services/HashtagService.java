@@ -13,6 +13,7 @@ import simonelli.fabio.CapstoneProject.payloads.HashtagResponseDTO;
 import simonelli.fabio.CapstoneProject.payloads.NewHastagDTO;
 import simonelli.fabio.CapstoneProject.payloads.PostResponseDTO;
 import simonelli.fabio.CapstoneProject.payloads.PostUserDataResponseDTO;
+import simonelli.fabio.CapstoneProject.repositories.CommentsDAO;
 import simonelli.fabio.CapstoneProject.repositories.HashtagsDAO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 
@@ -29,6 +30,9 @@ public class HashtagService {
     private PostsDAO postsDAO;
     @Autowired
     LikeService likeService;
+
+    @Autowired
+    CommentsDAO commentsDAO;
 
     public Set<HashtagResponseDTO> findAllHashtags(){
         return new HashSet<>(hashtagsDAO.findAll().stream().map((hashtag)->{
@@ -55,7 +59,7 @@ public class HashtagService {
         Page<PostResponseDTO> responseDTOPage = postsPage.map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
             boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, postUserDataResponseDTO);
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
         });
         return responseDTOPage;
     }
