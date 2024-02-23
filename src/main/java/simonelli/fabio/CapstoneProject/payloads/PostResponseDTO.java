@@ -10,5 +10,6 @@ public record PostResponseDTO(UUID id,
                               LocalDateTime publishDate,
                               long likeCount,
                               boolean isLiked,
+                              long totalComments,
                               PostUserDataResponseDTO creatorData) {
 }

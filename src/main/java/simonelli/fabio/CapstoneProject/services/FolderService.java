@@ -13,6 +13,7 @@ import simonelli.fabio.CapstoneProject.entities.User;
 import simonelli.fabio.CapstoneProject.exceptions.NotFoundException;
 import simonelli.fabio.CapstoneProject.exceptions.UnauthorizedException;
 import simonelli.fabio.CapstoneProject.payloads.*;
+import simonelli.fabio.CapstoneProject.repositories.CommentsDAO;
 import simonelli.fabio.CapstoneProject.repositories.FolderDAO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 
@@ -33,6 +34,9 @@ public class FolderService {
 
     @Autowired
     LikeService likeService;
+
+    @Autowired
+    CommentsDAO commentsDAO;
 
     public Page<FolderDTO> getAllFolders(int page, int size, String orderBy) {
         if (size >= 50) size = 50;
@@ -88,7 +92,7 @@ public class FolderService {
         Page<PostResponseDTO> postResponseDTOSPage = postPage.map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
             boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, postUserDataResponseDTO);
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
         });
         return returnFolderWithPostsDTO(found, postResponseDTOSPage);
     }
