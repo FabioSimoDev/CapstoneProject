@@ -114,6 +114,17 @@ public class PostService {
         return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), isLiked, commentsDAO.countByPostId(found.getId()), postUserDataResponseDTO);
     }
 
+    public List<PostResponseDTO> findByUserId(UUID userId) {
+        User user = usersDAO.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+        List<PostResponseDTO> postResponseDTOS = postsDAO.findByUser(user).stream().map(post -> {
+            PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
+            boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
+        }).toList();
+
+        return postResponseDTOS;
+    }
+
     public List<PostResponseDTO> findByUser(User user) {
         List<PostResponseDTO> postResponseDTOS = postsDAO.findByUser(user).stream().map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
