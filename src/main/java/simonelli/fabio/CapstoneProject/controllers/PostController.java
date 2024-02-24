@@ -30,6 +30,11 @@ public class PostController {
         return postService.getAllPosts(currentUser, page, size, orderBy);
     }
 
+    @GetMapping("/{userId}")
+    public List<PostResponseDTO> getPostsByUser(@PathVariable UUID userId){
+        return postService.findByUserId(userId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PostResponseDTO savePost(@AuthenticationPrincipal User currentUser, @RequestBody NewPostDTO body){
