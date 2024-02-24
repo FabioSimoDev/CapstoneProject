@@ -58,7 +58,7 @@ const Post = ({ post }) => {
         />
       }
       <div className="flex flex-col gap-3">
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center" role="button">
           <div className="w-[30px] h-[30px] shrink-0">
             <img
               src={postOwner?.avatarURL}
@@ -87,9 +87,15 @@ const Post = ({ post }) => {
                 color="red"
                 className="animate-jump"
                 onClick={handleLike}
+                aria-label="post piaciuto"
               />
             ) : (
-              <FaRegHeart size={24} role="button" onClick={handleLike} />
+              <FaRegHeart
+                size={24}
+                role="button"
+                onClick={handleLike}
+                aria-label="metti mi piace"
+              />
             )}
             <IoChatbubbleOutline size={24} onClick={openModal} />
           </div>
@@ -104,6 +110,7 @@ const Post = ({ post }) => {
             {post.content}
           </small>
           <small
+            role="button"
             className="opacity-50 text-[0.900rem] font-medium"
             onClick={openModal}
           >
