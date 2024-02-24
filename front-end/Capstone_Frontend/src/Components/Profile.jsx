@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { getPersonalPosts } from "../Redux/actions/postActions";
 import { IoMdGrid } from "react-icons/io";
 import { CgBookmark } from "react-icons/cg";
@@ -13,6 +13,7 @@ const Profile = () => {
   const token = useSelector((state) => state.auth.token);
   const personalData = useSelector((state) => state.userData.currentUser);
   const posts = useSelector((state) => state.posts.posts);
+  const navigate = useNavigate();
   const { userId } = useParams();
   const dispatch = useDispatch();
 
@@ -50,7 +51,10 @@ const Profile = () => {
                 <div className="w-full flex flex-col justify-evenly gap-2">
                   <div className="flex gap-8 items-center">
                     <h1 className="text-xl">{userData.username}</h1>
-                    <button className="secondary-button">
+                    <button
+                      className="secondary-button"
+                      onClick={() => navigate("/settings")}
+                    >
                       Modifica profilo
                     </button>
                   </div>
