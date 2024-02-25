@@ -55,3 +55,20 @@ export const getAllPosts = (token) => {
     }
   };
 };
+
+export const getPostsByUser = (token, userId) => {
+  return async (dispatch) => {
+    dispatch(getPostsRequest());
+    try {
+      const data = await fetchApi(
+        POSTS_ENDPOINTS.GET_BY_USER + userId,
+        "GET",
+        {},
+        token
+      );
+      dispatch(getPostSuccess(data));
+    } catch (error) {
+      dispatch(getPostFailure(error.detail));
+    }
+  };
+};

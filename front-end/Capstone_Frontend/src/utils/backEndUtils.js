@@ -17,7 +17,8 @@ export const USER_PROFILE_ENDPOINT = {
 
 export const POSTS_ENDPOINTS = {
   GET_PERSONAL_POSTS: "/posts/me",
-  GET_ALL_POSTS: "/posts"
+  GET_ALL_POSTS: "/posts",
+  GET_BY_USER: "/posts/getByUser/"
 };
 
 export const LIKES_ENDPOINTS = {

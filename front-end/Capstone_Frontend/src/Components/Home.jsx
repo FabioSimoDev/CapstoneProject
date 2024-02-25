@@ -4,6 +4,7 @@ import { Fragment, useEffect } from "react";
 import { getAllPosts } from "../Redux/actions/postActions";
 import Post from "./Post";
 import Modal from "./Modal/Modal";
+import PostSkeleton from "./PostSkeleton";
 
 const Home = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
@@ -28,12 +29,16 @@ const Home = () => {
           <div className="p-8 max-w-[900px] mx-auto flex flex-col items-center">
             <h1 className="text-4xl">Pagina Principale</h1>
             <div className="w-[28rem] flex flex-col gap-3">
-              {allPosts?.content?.map((post, index) => (
-                <Fragment key={index}>
-                  <Post post={post} />
-                  <div className="border-t pt-2 border-black/30 dark:border-white/10"></div>
-                </Fragment>
-              ))}
+              {allPosts.content ? (
+                allPosts?.content?.map((post, index) => (
+                  <Fragment key={index}>
+                    <Post post={post} />
+                    <div className="border-t pt-2 border-black/30 dark:border-white/10"></div>
+                  </Fragment>
+                ))
+              ) : (
+                <PostSkeleton />
+              )}
             </div>
           </div>
         </div>
