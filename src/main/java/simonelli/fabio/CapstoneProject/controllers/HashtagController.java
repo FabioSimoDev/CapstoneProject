@@ -16,6 +16,7 @@ import simonelli.fabio.CapstoneProject.repositories.HashtagsDAO;
 import simonelli.fabio.CapstoneProject.services.HashtagService;
 
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/hashtags")
@@ -43,5 +44,13 @@ public class HashtagController {
                                                    @RequestParam(defaultValue = "20") int size,
                                                    @RequestParam(defaultValue = "id") String orderBy) {
         return hashtagService.findPostsByHashtag(currentUser, hashtag, page, size, orderBy);
+    }
+
+    @GetMapping("/postHashtag/{postId}")
+    public Page<HashtagResponseDTO> getPostHashtags(@PathVariable UUID postId,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "20") int size,
+                                                    @RequestParam(defaultValue = "id") String orderBy){
+        return hashtagService.getPostHashtags(postId, page, size, orderBy);
     }
 }

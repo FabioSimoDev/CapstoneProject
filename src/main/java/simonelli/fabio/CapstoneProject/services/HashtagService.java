@@ -17,10 +17,7 @@ import simonelli.fabio.CapstoneProject.repositories.CommentsDAO;
 import simonelli.fabio.CapstoneProject.repositories.HashtagsDAO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class HashtagService {
@@ -60,6 +57,17 @@ public class HashtagService {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
             boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
             return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
+        });
+        return responseDTOPage;
+    }
+
+    public Page<HashtagResponseDTO> getPostHashtags(UUID postId, int page, int size, String orderBy){
+        if(size > 20) size = 20;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        Page<Hashtag> hashtagPage = hashtagsDAO.findByPostsId(postId, pageable);
+
+        Page<HashtagResponseDTO> responseDTOPage = hashtagPage.map(hashtag -> {
+            return new HashtagResponseDTO(hashtag.getId(), hashtag.getHashtagText());
         });
         return responseDTOPage;
     }

@@ -3,7 +3,6 @@ import Sidebar from "./Sidebar";
 import { Fragment, useEffect } from "react";
 import { getAllPosts } from "../Redux/actions/postActions";
 import Post from "./Post";
-import Modal from "./Modal/Modal";
 import PostSkeleton from "./PostSkeleton";
 
 const Home = () => {
