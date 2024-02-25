@@ -30,7 +30,7 @@ public class PostController {
         return postService.getAllPosts(currentUser, page, size, orderBy);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/getByUser/{userId}")
     public List<PostResponseDTO> getPostsByUser(@PathVariable UUID userId){
         return postService.findByUserId(userId);
     }

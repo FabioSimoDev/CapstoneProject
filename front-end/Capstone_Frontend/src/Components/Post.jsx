@@ -62,6 +62,7 @@ const Post = ({ post }) => {
         <PostHeader
           username={postOwner?.username}
           timePassed={timePassed}
+          userId={postOwner?.userId}
           avatarURL={postOwner?.avatarURL}
         />
         <PostImage

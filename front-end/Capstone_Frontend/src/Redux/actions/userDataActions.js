@@ -62,6 +62,7 @@ export const loadUserDataById = (token, id) => {
       );
       console.log("tutto ok");
       dispatch(loadUserDataSuccess(data));
+      return data;
     } catch (error) {
       console.log("errore");
       dispatch(loadUserDataFailure(error.detail));

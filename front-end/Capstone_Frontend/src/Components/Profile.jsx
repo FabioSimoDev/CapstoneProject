@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router";
-import { getPersonalPosts } from "../Redux/actions/postActions";
+import { getPersonalPosts, getPostsByUser } from "../Redux/actions/postActions";
 import { IoMdGrid } from "react-icons/io";
 import { CgBookmark } from "react-icons/cg";
+import { loadUserDataById } from "../Redux/actions/userDataActions";
+import SkeletonProfile from "./SkeletonProfile";
 
 const Profile = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
@@ -21,6 +23,8 @@ const Profile = () => {
     if (token && userId) {
       if (userId === "me") {
         dispatch(getPersonalPosts(token));
+      } else {
+        dispatch(getPostsByUser(token, userId));
       }
     }
   }, [token, userId]);
@@ -28,6 +32,11 @@ const Profile = () => {
   useEffect(() => {
     if (userId === "me") {
       setUserData(personalData);
+    } else {
+      dispatch(loadUserDataById(token, userId)).then((userData) => {
+        console.log(userData);
+        setUserData(userData);
+      });
     }
   }, [userId, personalData]);
 
@@ -36,7 +45,9 @@ const Profile = () => {
       <div className={`custom-base-container`}>
         <Sidebar />
         {!userData || !posts ? (
-          <h1>CARICAMENTO</h1>
+          <div className="max-w-[65rem] w-full mx-auto py-9 px-5">
+            <SkeletonProfile />
+          </div>
         ) : (
           <>
             <div className="max-w-[65rem] w-full mx-auto py-9 px-5">
