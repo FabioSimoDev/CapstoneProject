@@ -31,5 +31,5 @@ PostActions.propTypes = {
   handleLike: PropTypes.func,
   openModal: PropTypes.func,
   likeCount: PropTypes.number,
-  postHashtags: PropTypes.object
+  postHashtags: PropTypes.array
 };

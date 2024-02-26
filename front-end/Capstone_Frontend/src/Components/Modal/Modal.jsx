@@ -1,3 +1,5 @@
+import { PropTypes } from "prop-types";
+
 const Modal = ({ open, onClose, children }) => {
   return (
     //"backdrop"
@@ -20,3 +22,9 @@ const Modal = ({ open, onClose, children }) => {
 };
 
 export default Modal;
+
+Modal.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  children: PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+};
