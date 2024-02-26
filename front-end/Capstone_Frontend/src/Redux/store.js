@@ -6,6 +6,7 @@ import userProfileReducer from "./reducers/userProfileReducer";
 import postReducer from "./reducers/postReducer";
 import likeReducer from "./reducers/likeReducer";
 import commentReducer from "./reducers/commentReducer";
+import hashtagReducer from "./reducers/hashtagReducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   userProfile: userProfileReducer,
   posts: postReducer,
   likes: likeReducer,
-  comments: commentReducer
+  comments: commentReducer,
+  hashtags: hashtagReducer
 });
 
 const store = configureStore({ reducer: rootReducer });

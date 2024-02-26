@@ -1,5 +1,5 @@
 import { PropTypes } from "prop-types";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { calculateDistanceToNow } from "../utils/dateUtils";
 import {
@@ -13,6 +13,7 @@ import PostHeader from "./PostHeader";
 import PostImage from "./PostImage";
 import PostActions from "./PostActions";
 import PostContent from "./PostContent";
+import { getPostHashtags } from "../Redux/actions/hashtagActions";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const Post = ({ post }) => {
   const { postOwner } = usePostOwner(post.creatorData);
   const { isPostLiked, likeCount, handleLike } = usePostLike(post, token);
   const [postModalOpen, setPostModalOpen] = useState(false);
+  const [postHashtags, setPostHashtags] = useState(null);
   const comments = useSelector((state) => state.comments);
   const newCommentInput = useRef();
 
@@ -40,6 +42,14 @@ const Post = ({ post }) => {
       dispatch(createComment(token, post.id, newCommentInput.current.value));
     }
   };
+
+  useEffect(() => {
+    dispatch(getPostHashtags(token, post.id)).then((data) => {
+      if (data) {
+        setPostHashtags(data);
+      }
+    });
+  }, [dispatch, post.id, token]);
 
   return (
     <>
@@ -75,6 +85,7 @@ const Post = ({ post }) => {
             handleLike={handleLike}
             openModal={openModal}
             likeCount={likeCount}
+            postHashtags={postHashtags?.content ?? []}
           />
           <PostContent
             username={postOwner?.username}

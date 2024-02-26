@@ -32,6 +32,10 @@ export const COMMENTS_ENDPOINT = {
   CREATE_COMMENT: "/comments/create"
 };
 
+export const HASHTAGS_ENDPOINTS = {
+  GET_POST_HASHTAGS: "/hashtags/postHashtag/"
+};
+
 export const fetchApi = async (
   endpoint,
   method,
