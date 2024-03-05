@@ -1,17 +1,29 @@
-import { useEffect, useState } from "react";
-import { FiMenu, FiX, FiUser, FiSettings, FiMoon, FiSun } from "react-icons/fi";
+import { useState } from "react";
+import { FiUser, FiSettings } from "react-icons/fi";
 import { GoHomeFill } from "react-icons/go";
-import { useDispatch, useSelector } from "react-redux";
-import { setDarkMode } from "../Redux/actions/themeActions";
+import { useSelector } from "react-redux";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router";
+import NavLink from "./NavLink";
+import DarkModeToggle from "./DarkModeToggle";
+import { LuPlusSquare } from "react-icons/lu";
+import CreatePostModal from "./Modal/CreatePostModal";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const darkMode = useSelector((state) => state.theme.darkMode);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.userData.currentUser);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className={`flex md:flex-row flex-col ${darkMode ? "dark" : null}`}>
@@ -31,70 +43,35 @@ const Sidebar = () => {
         </a>
 
         <nav className="flex items-center justify-evenly w-full md:flex-col md:gap-5 md:justify-center xl:items-start my-0">
-          <div
-            id="sidebar-home-link-container"
-            className="flex items-center justify-center xl:justify-start rounded transition duration-200 xl:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+          <NavLink
             onClick={() => navigate("/home")}
-          >
-            <GoHomeFill
-              size={24}
-              className=""
-              color={darkMode ? "white" : "black"}
-            />
-            <a href="#" className="block py-2.5 px-4 hidden xl:block">
-              Home
-            </a>
-          </div>
-          <div
-            id="sidebar-profile-link-container"
-            className="flex items-center justify-center xl:justify-start rounded transition duration-200 xl:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            icon={GoHomeFill}
+            label="Home"
+            darkMode={darkMode}
+          />
+          <NavLink
             onClick={() => navigate("/profile/me")}
-          >
-            {currentUser ? (
-              <div className="w-[24px] h-[24px]">
-                <img
-                  src={currentUser?.avatarURL}
-                  className="rounded-full w-full h-full object-cover"
-                ></img>
-              </div>
-            ) : (
-              <FiUser
-                size={24}
-                className=""
-                color={darkMode ? "white" : "black"}
-              />
-            )}
-
-            <a href="#" className="block py-2.5 px-4 hidden xl:block">
-              Profile
-            </a>
-          </div>
-          <div
-            id="sidebar-settings-link-container"
-            className="flex items-center justify-center xl:justify-start rounded transition duration-200 xl:hover:bg-gray-300/20 px-4 w-full cursor-pointer"
+            icon={currentUser ? null : FiUser}
+            avatarURL={currentUser?.avatarURL}
+            label="Profile"
+            darkMode={darkMode}
+          />
+          <NavLink
+            onClick={openModal}
+            icon={LuPlusSquare}
+            label="Create"
+            darkMode={darkMode}
+          />
+          <NavLink
             onClick={() => navigate("/settings")}
-          >
-            <FiSettings
-              size={24}
-              className=""
-              color={darkMode ? "white" : "black"}
-            />
-            <a href="#" className="block py-2.5 px-4 hidden xl:block">
-              Settings
-            </a>
-          </div>
+            icon={FiSettings}
+            label="Settings"
+            darkMode={darkMode}
+          />
         </nav>
-
-        <button
-          onClick={() => dispatch(setDarkMode(!darkMode))}
-          className="xl:flex xl:mx-0 mx-auto items-center space-x-2 px-4 hidden"
-        >
-          {darkMode ? <FiSun size={24} /> : <FiMoon size={24} />}
-          <span className="hidden xl:block">
-            Switch to {darkMode ? "Light" : "Dark"} Mode
-          </span>
-        </button>
+        <DarkModeToggle />
       </div>
+      <CreatePostModal open={isModalOpen} onClose={closeModal} />
 
       {/* <button
         className="text-white md:hidden p-4 fixed bottom-0 right-0"

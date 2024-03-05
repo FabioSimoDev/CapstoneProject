@@ -1,5 +1,7 @@
 package simonelli.fabio.CapstoneProject.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -7,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import simonelli.fabio.CapstoneProject.entities.Hashtag;
 import simonelli.fabio.CapstoneProject.entities.Post;
 import simonelli.fabio.CapstoneProject.entities.User;
@@ -18,6 +21,7 @@ import simonelli.fabio.CapstoneProject.repositories.HashtagsDAO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 import simonelli.fabio.CapstoneProject.repositories.UsersDAO;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,9 +46,12 @@ public class PostService {
     @Autowired
     CommentsDAO commentsDAO;
 
+    @Autowired
+    Cloudinary cloudinaryUploader;
+
     public Page<PostResponseDTO> getAllPosts(User user, int page, int size, String orderBy) {
         if (size >= 50) size = 50;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).descending());
         Page<Post> postPage = postsDAO.findAll(pageable);
         Page<PostResponseDTO> responseDTOPage = postPage.map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
@@ -56,11 +63,17 @@ public class PostService {
 
     // in questo caso usare transactional è indifferente, viene gestito da Spring Data. lo tengo per abitudine e chiarezza del codice.
     @Transactional
-    public PostResponseDTO createPost(User currentUser, NewPostDTO body) {
+    public PostResponseDTO createPost(MultipartFile file, User currentUser, NewPostDTO body) throws IOException {
+        String url = null;
+        if (!(file == null)) {
+            url = (String) cloudinaryUploader.uploader()
+                    .upload(file.getBytes(), ObjectUtils.emptyMap())
+                    .get("url");
+        }
         Post newPost = new Post();
         newPost.setContent(body.content());
         newPost.setTitle(body.title());
-        newPost.setImageURL(body.imageURL());
+        newPost.setImageURL(url == null ? body.imageURL() : url);
         newPost.setUser(currentUser);
         // aggiungi il post alla lista di post dello user
         User user = usersDAO.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Utente con ID " + currentUser.getId() + " non trovato. Sembrano esserci problemi con il token"));

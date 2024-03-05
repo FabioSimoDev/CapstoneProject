@@ -14,6 +14,7 @@ import PostImage from "./PostImage";
 import PostActions from "./PostActions";
 import PostContent from "./PostContent";
 import { getPostHashtags } from "../Redux/actions/hashtagActions";
+import PostTitle from "./PostTitle";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
@@ -75,9 +76,13 @@ const Post = ({ post }) => {
           userId={postOwner?.userId}
           avatarURL={postOwner?.avatarURL}
         />
+        <PostTitle postTitle={post.title} />
         <PostImage
           alt={"post image"}
-          src="https://predis.ai/resources/wp-content/uploads/2021/12/instagram-reels-sizes-dimensions-ratios-0-1-893x1024.png"
+          src={
+            post.image_url ??
+            "https://predis.ai/resources/wp-content/uploads/2021/12/instagram-reels-sizes-dimensions-ratios-0-1-893x1024.png"
+          }
         />
         <div className="flex flex-col gap-2">
           <PostActions

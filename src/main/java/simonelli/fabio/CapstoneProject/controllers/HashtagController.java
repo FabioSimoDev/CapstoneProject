@@ -31,7 +31,7 @@ public class HashtagController {
 
     @PostMapping
     public HashtagResponseDTO createHashtag(@RequestBody @Validated NewHastagDTO hashtag, BindingResult validation) {
-        if(validation.hasErrors()){
+        if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors());
         }
         return hashtagService.saveHashtag(hashtag);
@@ -50,7 +50,15 @@ public class HashtagController {
     public Page<HashtagResponseDTO> getPostHashtags(@PathVariable UUID postId,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "20") int size,
-                                                    @RequestParam(defaultValue = "id") String orderBy){
+                                                    @RequestParam(defaultValue = "id") String orderBy) {
         return hashtagService.getPostHashtags(postId, page, size, orderBy);
+    }
+
+    @GetMapping("/")
+    public Page<HashtagResponseDTO> getHashtagByText(@RequestParam String query, @RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "20") int size,
+                                                     @RequestParam(defaultValue = "id") String orderBy) {
+        return hashtagService.getHashtagsByText(query, page, size, orderBy);
+
     }
 }

@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3001";
+export const BASE_URL = "http://localhost:3001";
 
 export const AUTH_ENDPOINTS = {
   LOGIN: "/auth/login",
@@ -18,6 +18,7 @@ export const USER_PROFILE_ENDPOINT = {
 export const POSTS_ENDPOINTS = {
   GET_PERSONAL_POSTS: "/posts/me",
   GET_ALL_POSTS: "/posts",
+  CREATE_POST: "/posts",
   GET_BY_USER: "/posts/getByUser/"
 };
 

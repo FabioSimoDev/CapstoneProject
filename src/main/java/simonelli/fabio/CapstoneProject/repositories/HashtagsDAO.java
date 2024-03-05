@@ -14,4 +14,6 @@ public interface HashtagsDAO extends JpaRepository<Hashtag, UUID> {
     public Optional<Hashtag> findByHashtagText(String text);
 
     public Page<Hashtag> findByPostsId(UUID postsId, Pageable pageable);
+
+    public Page<Hashtag> findByHashtagTextContainingIgnoreCase(String query, Pageable pageable);
 }

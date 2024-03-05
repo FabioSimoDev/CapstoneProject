@@ -71,4 +71,15 @@ public class HashtagService {
         });
         return responseDTOPage;
     }
+
+    public Page<HashtagResponseDTO> getHashtagsByText(String query, int page, int size, String orderBy){
+        if(size > 10) size = 10;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        Page<Hashtag> hashtagPage = hashtagsDAO.findByHashtagTextContainingIgnoreCase(query, pageable);
+
+        Page<HashtagResponseDTO> responseDTOPage = hashtagPage.map(hashtag -> {
+            return new HashtagResponseDTO(hashtag.getId(), hashtag.getHashtagText());
+        });
+        return responseDTOPage;
+    }
 }
