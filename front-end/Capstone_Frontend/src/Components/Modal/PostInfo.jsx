@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import debounce from "../../utils/debounceFunc";
 import { useCallback } from "react";
 import { useHashtags } from "../../hooks/useHashtags";
