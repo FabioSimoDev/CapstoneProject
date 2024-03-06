@@ -33,7 +33,7 @@ public class PostController {
     }
 
     @GetMapping("/getByUser/{userId}")
-    public List<PostResponseDTO> getPostsByUser(@PathVariable UUID userId){
+    public List<PostResponseDTO> getPostsByUser(@PathVariable UUID userId) {
         return postService.findByUserId(userId);
     }
 
@@ -45,35 +45,43 @@ public class PostController {
 
     @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePost(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId){
+    public void deletePost(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId) {
         postService.findByIdAndDelete(postId);
     }
 
     @GetMapping("/{postId}")
-    public PostResponseDTO getPostById(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId){
+    public PostResponseDTO getPostById(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId) {
         return postService.findById(currentUser, postId);
+    }
+
+    @GetMapping("/title/{postTitle}")
+    public Page<PostResponseDTO> getPostByTitle(@AuthenticationPrincipal User currentUser, @PathVariable String postTitle,
+                                                @RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "10") int size,
+                                                @RequestParam(defaultValue = "publishDate") String orderBy) {
+        return postService.findPostByTitle(currentUser, postTitle, page, size, orderBy);
     }
 
     @PutMapping("/{postId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public PostResponseDTO getPostByIdAndUpdate(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId, @RequestBody UpdateExistingPostDTO body){
+    public PostResponseDTO getPostByIdAndUpdate(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId, @RequestBody UpdateExistingPostDTO body) {
         return postService.findByIdAndUpdate(currentUser, postId, body);
     }
 
     @GetMapping("/me")
-    public List<PostResponseDTO> getLoggedUserPosts(@AuthenticationPrincipal User currentUser){
+    public List<PostResponseDTO> getLoggedUserPosts(@AuthenticationPrincipal User currentUser) {
         return postService.findByUser(currentUser);
     }
 
     @PostMapping("/{postId}/addHashtag/{hashtagText}")
     @ResponseStatus(HttpStatus.CREATED)
-    public PostResponseDTO addHashtagToPost(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId, @PathVariable String hashtagText){
+    public PostResponseDTO addHashtagToPost(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId, @PathVariable String hashtagText) {
         return postService.addHashtagToPost(currentUser, postId, hashtagText);
     }
 
     @DeleteMapping("/{postId}/removeHashtag/{hashtagText}")
     @ResponseStatus(HttpStatus.OK)
-    public PostResponseDTO removeHashtagFromPost(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId, @PathVariable String hashtagText){
+    public PostResponseDTO removeHashtagFromPost(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId, @PathVariable String hashtagText) {
         return postService.removeHashtagFromPost(currentUser, postId, hashtagText);
     }
 

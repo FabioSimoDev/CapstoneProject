@@ -50,6 +50,12 @@ public class UsersService {
         return usersDAO.findById(id).orElseThrow(()->new NotFoundException(id));
     }
 
+    public Page<User> findUsersByUsernameSample(String username, int page, int size, String orderBy){
+        if(size>=100)size=100;
+        Pageable pageable= PageRequest.of(page,size, Sort.by(orderBy));
+        return usersDAO.findByUsernameContainingIgnoreCase(username, pageable);
+    }
+
     public User findByEmail(String email) {
         return usersDAO.findByEmailIgnoreCase(email).orElseThrow(()->new NotFoundException("Questa mail: " +  email + " non è stata trovata."));
     }

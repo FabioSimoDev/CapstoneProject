@@ -18,6 +18,7 @@ export default function PostSkeleton() {
           <div className="flex gap-2 w-full pb-2">
             <div className="w-[24px] h-[24px] bg-slate-200 dark:bg-slate-700 rounded-full"></div>
             <div className="w-[24px] h-[24px] bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+            <div className="w-[8rem] h-[24px] bg-slate-200 dark:bg-slate-700 rounded-md"></div>
             <div className="w-[24px] h-[24px] bg-slate-200 dark:bg-slate-700 rounded-lg ms-auto"></div>
           </div>
           <div className="w-[5rem] h-6 bg-slate-200 dark:bg-slate-700 rounded"></div>

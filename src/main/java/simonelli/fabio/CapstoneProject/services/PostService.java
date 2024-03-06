@@ -97,6 +97,18 @@ public class PostService {
         return postsDAO.findById(id).orElseThrow(() -> new NotFoundException("Post con ID " + id + " non trovato."));
     }
 
+    public Page<PostResponseDTO> findPostByTitle(User currentUser, String title, int page, int size, String orderBy){
+        if (size >= 50) size = 50;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).descending());
+        Page<Post> postPage = postsDAO.findByTitleContainingIgnoreCase(title, pageable);
+        Page<PostResponseDTO> responseDTOPage = postPage.map(post -> {
+            PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
+            boolean isLiked = likeService.existsByUserAndPost(currentUser.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
+        });
+        return responseDTOPage;
+    }
+
     public void findByIdAndDelete(UUID id) {
         Post found = this.findPostById(id);
         postsDAO.delete(found);

@@ -26,7 +26,7 @@ const Home = () => {
       <div className={`custom-base-container `}>
         <Sidebar />
         <div className="w-full h-screen overflow-y-auto">
-          <div className="p-8 max-w-[900px] mx-auto flex flex-col items-center">
+          <div className="p-8 max-w-[900px] mx-auto flex flex-col items-center gap-10">
             <h1 className="text-4xl">Pagina Principale</h1>
             <div className="w-[28rem] flex flex-col gap-3">
               {!isLoading && !isError ? (
@@ -37,7 +37,11 @@ const Home = () => {
                   </Fragment>
                 ))
               ) : (
-                <PostSkeleton />
+                <div className="flex flex-col gap-11">
+                  {[...Array(10)].map((u, index) => (
+                    <PostSkeleton key={index} />
+                  ))}
+                </div>
               )}
             </div>
           </div>

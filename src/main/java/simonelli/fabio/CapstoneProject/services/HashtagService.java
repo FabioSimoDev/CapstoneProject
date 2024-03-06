@@ -51,7 +51,7 @@ public class HashtagService {
     public Page<PostResponseDTO> findPostsByHashtag(User user, String hashtag, int page, int size, String orderBy) {
         if(size > 30) size=30;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        Page<Post> postsPage = postsDAO.findByHashtags_HashtagText(hashtag, pageable);
+        Page<Post> postsPage = postsDAO.findByHashtags_HashtagTextContainingIgnoreCase(hashtag, pageable);
 
         Page<PostResponseDTO> responseDTOPage = postsPage.map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());

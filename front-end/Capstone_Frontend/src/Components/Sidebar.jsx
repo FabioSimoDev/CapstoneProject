@@ -8,6 +8,7 @@ import NavLink from "./NavLink";
 import DarkModeToggle from "./DarkModeToggle";
 import { LuPlusSquare } from "react-icons/lu";
 import CreatePostModal from "./Modal/CreatePostModal";
+import { IoSearch } from "react-icons/io5";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -47,6 +48,12 @@ const Sidebar = () => {
             onClick={() => navigate("/home")}
             icon={GoHomeFill}
             label="Home"
+            darkMode={darkMode}
+          />
+          <NavLink
+            onClick={() => navigate("/search")}
+            icon={IoSearch}
+            label="Search"
             darkMode={darkMode}
           />
           <NavLink

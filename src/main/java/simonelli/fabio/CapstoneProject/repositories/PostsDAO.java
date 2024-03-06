@@ -14,7 +14,8 @@ import java.util.UUID;
 public interface PostsDAO extends JpaRepository<Post, UUID> {
     public List<Post> findByUser(User user);
 
-    public Page<Post> findByHashtags_HashtagText(String hashtagText, Pageable pageable);
+    public Page<Post> findByHashtags_HashtagTextContainingIgnoreCase(String hashtagText, Pageable pageable);
+    public Page<Post> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
     public Page<Post> findByFoldersId(UUID folderId, Pageable pageable);
 }

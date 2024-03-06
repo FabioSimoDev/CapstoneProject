@@ -20,14 +20,13 @@ const PostModal = ({
   return (
     <Modal open={isOpen} onClose={onClose}>
       <div className="flex h-full w-full text-black dark:text-white">
-        <div className="w-8/12 h-full">
-          <img
-            src="https://predis.ai/resources/wp-content/uploads/2021/12/instagram-reels-sizes-dimensions-ratios-0-1-893x1024.png"
-            alt="immagine"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="w-4/12 flex flex-col px-3 dark:bg-black border-l border-white/20">
+        <img
+          src={post.image_url}
+          alt="immagine"
+          className="h-full max-w-xxl aspect-auto object-cover"
+          draggable={false}
+        />
+        <div className="grow max-w-lg flex flex-col px-3 dark:bg-black border-l border-white/20">
           <div className="flex justify-between border-b border-white/20 py-3">
             <div className="flex items-center gap-3">
               <div className="w-[35px] h-[35px]">
@@ -35,6 +34,7 @@ const PostModal = ({
                   src={postOwner?.avatarURL}
                   alt="Avatar"
                   className="rounded-full w-full h-full object-cover"
+                  draggable={false}
                 />
               </div>
               <small className="font-bold">{postOwner?.username}</small>

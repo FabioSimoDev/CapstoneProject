@@ -4,6 +4,7 @@ import BlockedAccounts from "../Components/BlockedAccounts";
 import CommentsSettings from "../Components/CommentsSettings";
 import ColorThemeSettings from "../Components/ColorThemeSettings";
 import RememberMeSettings from "../Components/RememberMeSettings";
+import PersonalInfoResume from "../Components/PersonalInfoResume";
 
 const SECTIONS_COMPONENTS = {
   modificaProfilo: ModifyProfile,
@@ -11,7 +12,8 @@ const SECTIONS_COMPONENTS = {
   utentiBloccati: BlockedAccounts,
   commentsSettings: CommentsSettings,
   colorTheme: ColorThemeSettings,
-  rememberMe: RememberMeSettings
+  rememberMe: RememberMeSettings,
+  personalInfo: PersonalInfoResume
 };
 
 export default SECTIONS_COMPONENTS;

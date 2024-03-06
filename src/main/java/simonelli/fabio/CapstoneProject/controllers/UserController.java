@@ -43,6 +43,14 @@ public class UserController {
         return usersService.findById(userId);
     }
 
+    @GetMapping("/username/{username}")
+    public Page<User> getUsersByUsername(@PathVariable String username,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int size,
+                                         @RequestParam(defaultValue = "id") String orderBy){
+        return usersService.findUsersByUsernameSample(username, page, size, orderBy);
+    }
+
     @PutMapping("/me/updateProfile")
     public User updateUser(@AuthenticationPrincipal User currentUser, @RequestBody @Validated UpdateExistingUserDTO body, BindingResult validation) {
         if (validation.hasErrors()) {

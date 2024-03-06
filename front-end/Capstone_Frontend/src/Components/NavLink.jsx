@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 const NavLink = ({ onClick, icon: Icon, avatarURL, label, darkMode }) => {
   return (
     <div
@@ -22,6 +23,14 @@ const NavLink = ({ onClick, icon: Icon, avatarURL, label, darkMode }) => {
       )}
     </div>
   );
+};
+
+NavLink.propTypes = {
+  avatarURL: PropTypes.string,
+  darkMode: PropTypes.bool,
+  icon: PropTypes.func,
+  label: PropTypes.string,
+  onClick: PropTypes.func
 };
 
 export default NavLink;
