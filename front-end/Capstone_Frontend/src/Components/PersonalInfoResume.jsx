@@ -45,7 +45,7 @@ export default function PersonalInfoResume() {
         </div>
         <div className="mt-4">
           <p className="text-lg font-semibold">Reputation</p>
-          <p className="text-gray-600">{personalData?.reputation}</p>
+          <p className="text-gray-600">{personalData?.reputation?.points}</p>
         </div>
       </div>
     </>
