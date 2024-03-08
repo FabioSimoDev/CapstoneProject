@@ -1,5 +1,6 @@
 import { PropTypes } from "prop-types";
 import { FaArrowLeft } from "react-icons/fa6";
+import LoadingDots from "../LoadingDots";
 
 export default function ModalHeader({
   currentPage,
@@ -22,13 +23,7 @@ export default function ModalHeader({
           onClick={nextPage}
         >
           Avanti
-          {isLoading && (
-            <div className="flex gap-2">
-              <div className="w-2 h-2 rounded-full animate-pulse bg-blue-600"></div>
-              <div className="w-2 h-2 rounded-full animate-pulse bg-blue-600"></div>
-              <div className="w-2 h-2 rounded-full animate-pulse bg-blue-600"></div>
-            </div>
-          )}
+          {isLoading && <LoadingDots />}
         </button>
       </div>
     </div>

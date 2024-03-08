@@ -13,6 +13,7 @@ import { FaPersonArrowUpFromLine } from "react-icons/fa6";
 import { BASE_URL } from "../utils/backEndUtils";
 import { useFolderQuery } from "../hooks/useFolderQuery";
 import FolderPreview from "./FolderPreview";
+import CreateFolderPreviewSquare from "./CreateFolderPreviewSquare";
 
 const Profile = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
@@ -205,6 +206,7 @@ const Profile = () => {
                       {folders.content?.map((folder, index) => (
                         <FolderPreview folder={folder} key={index} />
                       ))}
+                      <CreateFolderPreviewSquare />
                     </div>
                   )
                 )}
