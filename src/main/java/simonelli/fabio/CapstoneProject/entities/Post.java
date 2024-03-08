@@ -21,6 +21,7 @@ public class Post {
     private UUID id;
     private String title;
     private String content;
+    @Column(columnDefinition = "text")
     private String imageURL;
     private LocalDateTime publishDate;
     @JsonIgnore
@@ -67,4 +68,5 @@ public class Post {
     }
 
     public void addFolder(Folder folder) { this.folders.add(folder); }
+    public void removeFolder(Folder folder) { this.folders.remove(folder); }
 }

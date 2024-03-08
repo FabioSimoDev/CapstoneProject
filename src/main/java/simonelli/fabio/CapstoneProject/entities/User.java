@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import simonelli.fabio.CapstoneProject.entities.enums.ROLE;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.util.*;
 @Getter
 @Setter
 @Table(name = "users")
-@JsonIgnoreProperties({"accountNonExpired", "credentialsNonExpired", "enabled", "accountNonLocked", "authorities", "password", "role", "posts", "folders", "comments", "likes", "noteRequests"})
+@JsonIgnoreProperties({"accountNonExpired", "credentialsNonExpired", "enabled", "accountNonLocked", "authorities", "password", "role", "posts", "folders", "comments", "likes", "noteRequests", "followers", "following"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -27,6 +28,7 @@ public class User implements UserDetails {
     private ROLE role;
     private String email;
     private String username;
+    @Column(columnDefinition = "text")
     private String avatarURL;
     private String phoneNumber;
     private String password;
@@ -49,6 +51,21 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<NoteRequest> noteRequests;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_followers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id")
+    )
+    private Set<User> followers = new HashSet<>();
+
+    @ManyToMany(mappedBy = "followers")
+    private Set<User> following = new HashSet<>();
+
+    private int followersCount = 0;
+
+    private int followingCount = 0;
 
     public User() {
         this.signUpDate = LocalDateTime.now();
@@ -115,5 +132,15 @@ public class User implements UserDetails {
 
     public void addNoteRequest(NoteRequest noteRequest) {
         this.noteRequests.add(noteRequest);
+    }
+
+    public void follow(User userToFollow) {
+        following.add(userToFollow);
+        userToFollow.followers.add(this);
+    }
+
+    public void unfollow(User userToUnfollow) {
+        following.remove(userToUnfollow);
+        userToUnfollow.followers.remove(this);
     }
 }

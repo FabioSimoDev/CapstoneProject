@@ -2,20 +2,25 @@ import { PropTypes } from "prop-types";
 import LikeButton from "./LikeButton";
 import { IoChatbubbleOutline } from "react-icons/io5";
 import HashtagsDisplay from "./HashtagsDisplay";
+import SavePost from "./SavePost";
 
 export default function PostActions({
   isPostLiked,
   handleLike,
   openModal,
   likeCount,
+  postId,
   postHashtags
 }) {
   return (
     <div>
-      <div className="flex gap-3 w-min items-center" role="button">
+      <div className="flex gap-3 w-full items-center">
         <LikeButton isLiked={isPostLiked} handleLike={handleLike} />
-        <IoChatbubbleOutline size={24} onClick={openModal} />
+        <IoChatbubbleOutline size={24} onClick={openModal} role="button" />
         <HashtagsDisplay hashtags={postHashtags} />
+        <div className="ms-auto">
+          <SavePost postId={postId} />
+        </div>
       </div>
       {likeCount > 0 && (
         <small className="text-sm">

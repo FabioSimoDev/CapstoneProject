@@ -73,6 +73,7 @@ export default function PostInfo({ formData, postHashtags, setPostHashtags }) {
         onSave={saveHashtag}
         debouncedSearch={debouncedSearch}
         hashtags={hashtags}
+        hashtagInputRef={hashtagInputRef}
         isError={isError}
         error={error}
       />

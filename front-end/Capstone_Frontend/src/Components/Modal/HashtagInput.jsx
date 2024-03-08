@@ -4,6 +4,7 @@ export default function HashtagInput({
   onSave,
   debouncedSearch,
   hashtags,
+  hashtagInputRef,
   isError,
   error
 }) {
@@ -24,6 +25,7 @@ export default function HashtagInput({
         className="outline-none rounded-md"
         onKeyDown={handleKeyDown}
         onChange={debouncedSearch}
+        ref={hashtagInputRef}
       />
       {hashtags?.content?.length > 0 && !isError && (
         <ul

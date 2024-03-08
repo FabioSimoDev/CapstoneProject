@@ -17,9 +17,7 @@ import simonelli.fabio.CapstoneProject.repositories.CommentsDAO;
 import simonelli.fabio.CapstoneProject.repositories.FolderDAO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FolderService {
@@ -100,6 +98,10 @@ public class FolderService {
     public void deleteFolder(User authenticatedUser, UUID folderId){
         Folder found = this.findFolderById(folderId);
         if(!(found.getUser().getId().equals(authenticatedUser.getId()))) throw new UnauthorizedException("Non puoi modificare le cartelle di un altro utente");
+        for(Post post : found.getPosts()){
+            post.removeFolder(found);
+        }
+//        found.removeAllPosts(found.getPosts());
         folderDAO.delete(found);
     }
 

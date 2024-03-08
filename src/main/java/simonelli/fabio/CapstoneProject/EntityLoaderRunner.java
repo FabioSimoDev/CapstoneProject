@@ -75,7 +75,7 @@ public class EntityLoaderRunner implements CommandLineRunner {
         for(int i = 0; i < 10; i++){
             User newUser = new User();
             newUser.setEmail(faker.internet().emailAddress());
-            newUser.setName(faker.name().name());
+            newUser.setName(faker.name().firstName());
             newUser.setSurname(faker.name().lastName());
             newUser.setUsername(faker.name().username());
             newUser.setAvatarURL("https://ui-avatars.com/api/?name=" + newUser.getName() + "+" + newUser.getUsername());
@@ -86,7 +86,7 @@ public class EntityLoaderRunner implements CommandLineRunner {
             Post newPost = new Post();
             newPost.setTitle(faker.book().title());
             newPost.setContent("descrizione post " + i);
-            newPost.setImageURL(faker.internet().url());
+            newPost.setImageURL("https://scontent.cdninstagram.com/v/t51.29350-15/133868362_867561407395935_7227105968313745233_n.jpg?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xNDQweDE0NDAuc2RyIn0&_nc_ht=scontent.cdninstagram.com&_nc_cat=103&_nc_ohc=pvbx-HFfjgkAX_z7eUh&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MjQ3NzE1Nzk4Njc0NjIzMjQ3NA%3D%3D.2-ccb7-5&oh=00_AfBHlG-d45rEKwZzqtfxMC6LmgajoqQN_FM4tZRv0s-lLg&oe=65EC9510&_nc_sid=10d13b)");
             newPost.setUser(newUser);
             NewPostDTO newPostDTO = new NewPostDTO(newPost.getTitle(), newPost.getContent(), newPost.getImageURL());
 //            postService.createPost(newUser, newPostDTO);

@@ -19,7 +19,7 @@ public class Folder {
     private String name;
     @ManyToOne
     private User user;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable
     private Set<Post> posts = new HashSet<>();
     private LocalDateTime date;
@@ -31,4 +31,14 @@ public class Folder {
     public void addPost(Post post){
         this.posts.add(post);
     }
+    public void removePost(Post post){
+        this.posts.remove(post);
+        post.removeFolder(this);
+    }
+
+    public void removeAllPosts(Set<Post> posts){
+        this.posts.removeAll(posts);
+        this.posts.clear();
+    }
+
 }

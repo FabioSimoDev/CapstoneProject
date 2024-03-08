@@ -1,11 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL, POSTS_ENDPOINTS } from "../utils/backEndUtils";
 
-export function usePostForm() {
+export function usePostForm(setLoading) {
   const queryClient = useQueryClient();
 
   async function addHashtag(token, hashtag, postId) {
-    alert("hashtag fetch");
     const response = await fetch(
       `${BASE_URL}${POSTS_ENDPOINTS.CREATE_POST}/${postId}/addHashtag/${hashtag}`,
       {
@@ -23,6 +22,7 @@ export function usePostForm() {
 
   const mutation = useMutation({
     mutationFn: async ({ formData, token, hashtags }) => {
+      setLoading(true);
       const response = await fetch(BASE_URL + POSTS_ENDPOINTS.CREATE_POST, {
         method: "POST",
         headers: { Authorization: "Bearer " + token },
@@ -35,20 +35,17 @@ export function usePostForm() {
 
       const resJson = await response.json();
       if (hashtags.length > 0) {
-        alert("la lunghezza è maggiore di 0 ( ci sono hashtags ) ");
         const postId = resJson.id;
         hashtags.map(
           async (hashtag) => await addHashtag(token, hashtag, postId)
         );
-      } else {
-        alert("NON CI SONO HASHTAGS NOOOO");
       }
 
       return resJson;
     },
     onSuccess: () => {
-      alert("finito.");
       queryClient.invalidateQueries(["posts"]);
+      setLoading(false);
     }
   });
 

@@ -42,9 +42,9 @@ export const loadUserData = (token) => {
       dispatch(setCurrentUser(data));
     } catch (error) {
       console.log("errore");
+      console.log(error);
       //se error.status === 404 vuol dire che il token rappresenta uno user non presente nel DB.
-      dispatch(loadUserDataFailure(error.detail));
-      console.error(error.detail);
+      dispatch(loadUserDataFailure(error.status));
     }
   };
 };

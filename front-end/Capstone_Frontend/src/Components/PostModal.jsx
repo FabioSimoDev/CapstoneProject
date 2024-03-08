@@ -56,8 +56,8 @@ const PostModal = ({
                         className="rounded-full w-full h-full object-cover"
                       />
                     </div>
-                    <div className="w-full">
-                      <p className="text-sm">
+                    <div className="w-10/12">
+                      <p className="text-sm break-words">
                         <span className="font-bold">
                           {comment.user.username}
                         </span>{" "}

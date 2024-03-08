@@ -8,10 +8,17 @@ import { CgBookmark } from "react-icons/cg";
 import { loadUserDataById } from "../Redux/actions/userDataActions";
 import SkeletonProfile from "./SkeletonProfile";
 import PostPreview from "./PostPreview";
+import { useFollow } from "../hooks/useFollow";
+import { FaPersonArrowUpFromLine } from "react-icons/fa6";
+import { BASE_URL } from "../utils/backEndUtils";
+import { useFolderQuery } from "../hooks/useFolderQuery";
+import FolderPreview from "./FolderPreview";
 
 const Profile = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
   const [userData, setUserData] = useState(null);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [reputation, setReputation] = useState(0);
   const [selectedView, setSelectedView] = useState("POST");
   const token = useSelector((state) => state.auth.token);
   const personalData = useSelector((state) => state.userData.currentUser);
@@ -19,8 +26,30 @@ const Profile = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
   const dispatch = useDispatch();
+  const { follow, followUser, unfollowUser } = useFollow(userId);
+  const {
+    data: folders,
+    isLoading,
+    isError,
+    error
+  } = useFolderQuery(selectedView === "SALVATI");
+
+  const addReputation = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/users/${userId}/reputation`, {
+        method: "PUT",
+        headers: { Authorization: "Bearer " + token }
+      });
+      if (!response.ok) throw new Error("Network response was not ok");
+      const reputation = await response.json();
+      setReputation(reputation.points);
+    } catch (error) {
+      throw new Error("Failed to follow user: " + error.message);
+    }
+  };
 
   useEffect(() => {
+    if (!userId) navigate("/home");
     if (token && userId) {
       if (userId === "me") {
         dispatch(getPersonalPosts(token));
@@ -40,6 +69,11 @@ const Profile = () => {
       });
     }
   }, [userId, personalData]);
+
+  useEffect(() => {
+    setFollowerCount(userData?.followersCount);
+    setReputation(userData?.reputation?.points ?? 0);
+  }, [userData]);
 
   return (
     <div className={` ${darkMode ? "dark" : null}`}>
@@ -72,12 +106,34 @@ const Profile = () => {
                           Modifica profilo
                         </button>
                       ) : (
-                        <button
-                          className="secondary-button"
-                          onClick={() => navigate("/settings")}
-                        >
-                          Segui
-                        </button>
+                        <>
+                          <FaPersonArrowUpFromLine
+                            role="button"
+                            className="hover:scale-125 transition-transform duration-200 active:animate-jump"
+                            onClick={addReputation}
+                          />
+                          {!follow ? (
+                            <button
+                              className="secondary-button"
+                              onClick={() => {
+                                followUser();
+                                setFollowerCount((prev) => prev + 1);
+                              }}
+                            >
+                              Segui
+                            </button>
+                          ) : (
+                            <button
+                              className="secondary-button"
+                              onClick={() => {
+                                unfollowUser();
+                                setFollowerCount((prev) => prev - 1);
+                              }}
+                            >
+                              Smetti di seguire
+                            </button>
+                          )}
+                        </>
                       )}
                     </div>
                     <div className="flex gap-8 items-center">
@@ -85,10 +141,16 @@ const Profile = () => {
                         {posts.length} <span className="font-normal">post</span>
                       </p>
                       <p className="font-semibold">
-                        - <span className="font-normal">follower</span>
+                        {followerCount}{" "}
+                        <span className="font-normal">follower</span>
                       </p>
                       <p className="font-semibold">
-                        - <span className="font-normal">seguiti</span>
+                        {userData.followingCount}{" "}
+                        <span className="font-normal">seguiti</span>
+                      </p>
+                      <p className="font-semibold">
+                        {reputation}{" "}
+                        <span className="font-normal">reputazione</span>
                       </p>
                     </div>
                     <div className="flex flex-col">
@@ -125,14 +187,26 @@ const Profile = () => {
                     ELEMENTI SALVATI
                   </p>
                 </div>
-                {posts.length === 0 ? (
-                  <p>Non sono presenti post</p>
+                {selectedView !== "SALVATI" ? (
+                  <>
+                    {posts.length === 0 ? (
+                      <p>Non sono presenti post</p>
+                    ) : (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 py-4">
+                        {posts.map((post) => {
+                          return <PostPreview post={post} key={post.id} />;
+                        })}
+                      </div>
+                    )}
+                  </>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 py-4">
-                    {posts.map((post) => {
-                      return <PostPreview post={post} key={post.id} />;
-                    })}
-                  </div>
+                  folders && (
+                    <div className="grid grid-cols-3 gap-4 py-4">
+                      {folders.content?.map((folder, index) => (
+                        <FolderPreview folder={folder} key={index} />
+                      ))}
+                    </div>
+                  )
                 )}
               </div>
             </div>

@@ -69,7 +69,7 @@ const Post = ({ post }) => {
           newCommentInput={newCommentInput}
         />
       }
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         <PostHeader
           username={postOwner?.username}
           timePassed={timePassed}
@@ -90,6 +90,7 @@ const Post = ({ post }) => {
             handleLike={handleLike}
             openModal={openModal}
             likeCount={likeCount}
+            postId={post.id}
             postHashtags={postHashtags?.content ?? []}
           />
           <PostContent

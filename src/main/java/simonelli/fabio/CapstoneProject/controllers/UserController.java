@@ -60,6 +60,20 @@ public class UserController {
         }
     }
 
+    @PostMapping("/follow/{userId}")
+    public void followUser(@AuthenticationPrincipal User currentUser, @PathVariable UUID userId){
+        usersService.followUser(currentUser, userId);
+    }
+    @PostMapping("/unfollow/{userId}")
+    public void unfollowUser(@AuthenticationPrincipal User currentUser, @PathVariable UUID userId){
+        usersService.unfollowUser(currentUser, userId);
+    }
+
+    @GetMapping("/follows/{userId}")
+    public boolean isFollowing(@AuthenticationPrincipal User currentUser, @PathVariable UUID userId){
+        return usersService.isFollowing(currentUser, userId);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN')")

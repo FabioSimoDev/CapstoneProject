@@ -6,6 +6,7 @@ import UserContainer from "./Container-Components/UserContainer";
 import SettinsPage from "./Components/SettingsPage";
 import Profile from "./Components/Profile";
 import SearchPage from "./Components/SearchPage";
+import Folder from "./Components/Folder";
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/search/:hashtag?" element={<SearchPage />} />
         <Route path="/settings" element={<SettinsPage />} />
-        <Route path="/profile/:userId" element={<Profile />} />
+        <Route path="/profile/:userId?" element={<Profile />} />
+        <Route path="/folder/:folderId" element={<Folder />} />
       </Routes>
     </BrowserRouter>
   );

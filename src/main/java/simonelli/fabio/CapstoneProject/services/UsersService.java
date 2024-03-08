@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import simonelli.fabio.CapstoneProject.config.CloudinaryConfig;
 import simonelli.fabio.CapstoneProject.entities.NoteRequest;
@@ -44,6 +45,33 @@ public class UsersService {
         if(size>=100)size=100;
         Pageable pageable= PageRequest.of(page,size, Sort.by(orderBy));
         return usersDAO.findAll(pageable);
+    }
+
+    @Transactional
+    public void followUser(User currentUser, UUID followedUserId) {
+        User followingUser = findById(currentUser.getId());
+        User followedUser = findById(followedUserId);
+        followedUser.setFollowersCount(followedUser.getFollowersCount() + 1);
+        followingUser.setFollowingCount(followingUser.getFollowingCount() + 1);
+        followingUser.follow(followedUser);
+        usersDAO.save(followingUser);
+    }
+
+    @Transactional
+    public void unfollowUser(User currentUser, UUID followedUserId) {
+        User followingUser = findById(currentUser.getId());
+        User followedUser = findById(followedUserId);
+        followedUser.setFollowersCount(followedUser.getFollowersCount() - 1);
+        followingUser.setFollowingCount(followingUser.getFollowingCount() - 1);
+        followingUser.unfollow(followedUser);
+        usersDAO.save(followingUser);
+    }
+
+
+    public boolean isFollowing(User currentUser, UUID followedUserId) {
+        User user = findById(currentUser.getId());
+        User followedUser = findById(followedUserId);
+        return user.getFollowing().contains(followedUser);
     }
 
     public User findById(UUID id) {

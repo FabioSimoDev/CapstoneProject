@@ -17,12 +17,13 @@ const CreatePostModal = ({ open, onClose, children }) => {
   const { canvasRefCallBack, canvasRef } = useImageCanvas(image, filters);
   const [formData, setFormData] = useState(null);
   const [postHashtags, setPostHashtags] = useState([]);
+  const [loading, setLoading] = useState(false);
   const {
     mutate: submitPost,
     isLoading,
     isError: isPostError,
     error: postError
-  } = usePostForm();
+  } = usePostForm(setLoading);
   const token = useSelector((state) => state.auth.token);
 
   const onFilesAddedWrapper = (files) =>
@@ -35,6 +36,7 @@ const CreatePostModal = ({ open, onClose, children }) => {
       setFormData(data);
     }
   };
+  console.log(isLoading);
 
   const nextPage = () => {
     if (currentPage === Page.CREATE_POST) {
@@ -106,6 +108,7 @@ const CreatePostModal = ({ open, onClose, children }) => {
           nextPage={nextPage}
           prevPage={prevPage}
           pageTitles={pageTitles}
+          isLoading={loading}
         />
         {/* CORPO DEL MODALE */}
         {renderModalContent()}

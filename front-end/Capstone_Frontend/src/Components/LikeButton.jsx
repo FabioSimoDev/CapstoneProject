@@ -9,6 +9,7 @@ export default function LikeButton({ isLiked, handleLike }) {
       className="animate-jump"
       onClick={handleLike}
       aria-label="post piaciuto"
+      role="button"
     />
   ) : (
     <FaRegHeart size={24} onClick={handleLike} aria-label="metti mi piace" />

@@ -11,6 +11,7 @@ const LoginPage = () => {
   // const [darkMode, setDarkMode] = useState(true);
   const darkMode = useSelector((state) => state.theme.darkMode);
   const error = useSelector((state) => state.auth.error);
+  const errorUser = useSelector((state) => state.userData.error);
   const token = useSelector((state) => state.auth.token);
   const loading = useSelector((state) => state.auth.isLoading);
   const emailRef = useRef();
@@ -30,7 +31,7 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (token && !error) {
+    if (token && !error && !errorUser) {
       navigate("/home");
     }
   }, [token, error]);
@@ -41,7 +42,7 @@ const LoginPage = () => {
         <img
           src={screenshot}
           alt=""
-          className="hidden md:block"
+          className="hidden " //md:block
           draggable="false"
         />{" "}
         <div className="md:max-w-md max-w-sm sm:w-full w-11/12 px-6 py-8 bg-white dark:bg-gray-800 shadow-md rounded-md">

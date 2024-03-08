@@ -21,7 +21,7 @@ const ProfileCard = ({ profile }) => {
         </p>
         <p className="opacity-75 text-sm w-full flex gap-2">
           {profile.name} {profile.surname} <p>•</p>{" "}
-          <p>Reputation: {profile.reputation}</p>
+          <p>Reputation: {profile.reputation.points}</p>
         </p>
       </div>
     </div>
