@@ -102,4 +102,4 @@ Before running the application, ensure you configure the `env.properties` file w
 
 ## License
 
-EduShare is free to use for personal purposes. For more details, see the LICENSE file.
+EduShare is free to use for personal purposes. For more details, see the [LICENSE](LICENSE.md) file.
