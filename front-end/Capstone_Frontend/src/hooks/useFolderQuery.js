@@ -13,7 +13,7 @@ export const useFolderQuery = (open) => {
       if (!response.ok) throw new Error("Network response was not ok");
       return await response.json();
     } catch (error) {
-      throw new Error("Failed to fetch hashtags: " + error.message);
+      throw new Error("Failed to fetch folders: " + error.message);
     }
   };
 

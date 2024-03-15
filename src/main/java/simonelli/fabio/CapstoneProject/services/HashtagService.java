@@ -1,6 +1,7 @@
 package simonelli.fabio.CapstoneProject.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,10 @@ public class HashtagService {
     @Autowired
     CommentsDAO commentsDAO;
 
+    @Autowired
+    @Lazy
+    FolderService folderService;
+
     public Set<HashtagResponseDTO> findAllHashtags(){
         return new HashSet<>(hashtagsDAO.findAll().stream().map((hashtag)->{
             return new HashtagResponseDTO(hashtag.getId(), hashtag.getHashtagText());
@@ -56,7 +61,8 @@ public class HashtagService {
         Page<PostResponseDTO> responseDTOPage = postsPage.map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
             boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
+            boolean isSaved = folderService.existsByUserAndPost(user.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, isSaved, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
         });
         return responseDTOPage;
     }

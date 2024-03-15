@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import ImageDropZone from "./ImageDropZone";
+import ImageDropZone from "../Forms/ImageDropZone";
 import PreviewImage from "./PreviewImage";
 import useImageLoader from "../../hooks/useImageLoader";
 import { pageTitles, Page } from "../../utils/createPostModalPages";

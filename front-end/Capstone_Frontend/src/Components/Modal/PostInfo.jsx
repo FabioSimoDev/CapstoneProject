@@ -3,7 +3,7 @@ import debounce from "../../utils/debounceFunc";
 import { useCallback } from "react";
 import { useHashtags } from "../../hooks/useHashtags";
 import { PropTypes } from "prop-types";
-import HashtagInput from "./HashtagInput";
+import HashtagInput from "../Forms/HashtagInput";
 import UserInfo from "./UserInfo";
 
 export default function PostInfo({ formData, postHashtags, setPostHashtags }) {

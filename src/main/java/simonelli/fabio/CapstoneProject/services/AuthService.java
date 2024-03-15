@@ -3,6 +3,7 @@ package simonelli.fabio.CapstoneProject.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import simonelli.fabio.CapstoneProject.entities.Folder;
 import simonelli.fabio.CapstoneProject.entities.User;
 import simonelli.fabio.CapstoneProject.entities.enums.ROLE;
 import simonelli.fabio.CapstoneProject.exceptions.BadRequestException;
@@ -40,6 +41,8 @@ public class AuthService {
             newUser.setEmail(body.email().toLowerCase());
             newUser.setAvatarURL(("https://ui-avatars.com/api/?name=" + body.name() + "+" + body.surname()));
             newUser.setPassword(bcrypt.encode(body.password()));
+            Folder newFolder = new Folder("Tutti i post", newUser);
+            newUser.addFolder(newFolder);
             return usersDAO.save(newUser);
         }
     }

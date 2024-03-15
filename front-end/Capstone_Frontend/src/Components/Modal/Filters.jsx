@@ -1,4 +1,4 @@
-import InputRange from "../InputRange";
+import InputRange from "../UI/InputRange";
 
 export default function Filters({ applyFilter }) {
   const handleFilterChange = (filterType, value) => {

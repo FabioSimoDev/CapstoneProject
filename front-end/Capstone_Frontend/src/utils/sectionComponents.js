@@ -1,10 +1,10 @@
-import ModifyProfile from "../Components/ModifyProfile";
-import AccountPrivacy from "../Components/AccountPrivacy";
-import BlockedAccounts from "../Components/BlockedAccounts";
-import CommentsSettings from "../Components/CommentsSettings";
-import ColorThemeSettings from "../Components/ColorThemeSettings";
-import RememberMeSettings from "../Components/RememberMeSettings";
-import PersonalInfoResume from "../Components/PersonalInfoResume";
+import ModifyProfile from "../Components/Settings/ModifyProfile";
+import AccountPrivacy from "../Components/Settings/AccountPrivacy";
+import BlockedAccounts from "../Components/Settings/BlockedAccounts";
+import CommentsSettings from "../Components/Settings/CommentsSettings";
+import ColorThemeSettings from "../Components/UI/ColorThemeSettings";
+import RememberMeSettings from "../Components/Settings/RememberMeSettings";
+import PersonalInfoResume from "../Components/Settings/PersonalInfoResume";
 
 const SECTIONS_COMPONENTS = {
   modificaProfilo: ModifyProfile,

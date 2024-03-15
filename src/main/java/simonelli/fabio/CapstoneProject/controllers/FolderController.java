@@ -32,7 +32,7 @@ public class FolderController {
     @GetMapping("/me")
     public Page<FolderDTO> getAllFoldersFromUser(@AuthenticationPrincipal User currentUser, @RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "20") int size,
-                                                 @RequestParam(defaultValue = "id") String orderBy) {
+                                                 @RequestParam(defaultValue = "date") String orderBy) {
         return folderService.getAllFoldersFromUser(currentUser, page, size, orderBy);
     }
 
@@ -54,11 +54,18 @@ public class FolderController {
                                               @RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "20") int size) {
         return folderService.addPostToFolder(currentUser, folderId, postId, page, size);
+
+    }
+
+    @PostMapping("/removePost/{postId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void removePost(@AuthenticationPrincipal User currentUser, @PathVariable UUID postId) {
+        folderService.removePost(currentUser, postId);
     }
 
     @DeleteMapping("/{folderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFolder(@AuthenticationPrincipal User currentUser, @PathVariable UUID folderId){
+    public void deleteFolder(@AuthenticationPrincipal User currentUser, @PathVariable UUID folderId) {
         folderService.deleteFolder(currentUser, folderId);
     }
 }

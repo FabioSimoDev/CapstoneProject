@@ -28,12 +28,17 @@ public class Folder {
         this.date = LocalDateTime.now();
     }
 
+    public Folder(String name, User user) {
+        this.name = name;
+        this.user = user;
+        this.date = LocalDateTime.now();
+    }
+
     public void addPost(Post post){
         this.posts.add(post);
     }
     public void removePost(Post post){
         this.posts.remove(post);
-        post.removeFolder(this);
     }
 
     public void removeAllPosts(Set<Post> posts){

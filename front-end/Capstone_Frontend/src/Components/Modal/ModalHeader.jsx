@@ -1,6 +1,6 @@
 import { PropTypes } from "prop-types";
 import { FaArrowLeft } from "react-icons/fa6";
-import LoadingDots from "../LoadingDots";
+import LoadingDots from "../UI/LoadingDots";
 
 export default function ModalHeader({
   currentPage,
@@ -34,5 +34,6 @@ ModalHeader.propTypes = {
   currentPage: PropTypes.number,
   nextPage: PropTypes.func,
   prevPage: PropTypes.func,
-  pageTitles: PropTypes.object
+  pageTitles: PropTypes.object,
+  isLoading: PropTypes.bool
 };

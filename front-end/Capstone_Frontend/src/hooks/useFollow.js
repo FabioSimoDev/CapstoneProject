@@ -37,6 +37,7 @@ export const useFollow = (userId) => {
   }, [userId]);
 
   const checkFollow = async () => {
+    if (userId === "me") return;
     try {
       const response = await fetch(`${BASE_URL}/users/follows/${userId}`, {
         method: "GET",
