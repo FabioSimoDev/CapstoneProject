@@ -1,5 +1,6 @@
 package simonelli.fabio.CapstoneProject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,6 @@ public class Reputation {
     private UUID id;
     private int points;
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     private User user;
 }

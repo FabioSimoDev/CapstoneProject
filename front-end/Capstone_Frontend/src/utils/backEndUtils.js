@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3001";
+export const BASE_URL = "http://localhost:3001";
 
 export const AUTH_ENDPOINTS = {
   LOGIN: "/auth/login",
@@ -7,7 +7,8 @@ export const AUTH_ENDPOINTS = {
 
 export const USERS_DATA_ENDPOINT = {
   PERSONAL_DATA: "/users/me",
-  BY_ID_DATA: "/users/"
+  BY_ID_DATA: "/users/",
+  GET_BY_USERNAME: "/users/username/"
 };
 
 export const USER_PROFILE_ENDPOINT = {
@@ -18,6 +19,8 @@ export const USER_PROFILE_ENDPOINT = {
 export const POSTS_ENDPOINTS = {
   GET_PERSONAL_POSTS: "/posts/me",
   GET_ALL_POSTS: "/posts",
+  SEARCH_BY_TITLE: "/posts/title/",
+  CREATE_POST: "/posts",
   GET_BY_USER: "/posts/getByUser/"
 };
 
@@ -30,6 +33,11 @@ export const LIKES_ENDPOINTS = {
 export const COMMENTS_ENDPOINT = {
   GET_POST_COMMENTS: "/comments/",
   CREATE_COMMENT: "/comments/create"
+};
+
+export const HASHTAGS_ENDPOINTS = {
+  GET_POST_HASHTAGS: "/hashtags/postHashtag/",
+  GET_POSTS_BY_HASHTAG: "/hashtags/posts"
 };
 
 export const fetchApi = async (

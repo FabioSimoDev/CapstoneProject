@@ -1,12 +1,16 @@
 package simonelli.fabio.CapstoneProject.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import simonelli.fabio.CapstoneProject.entities.Hashtag;
 import simonelli.fabio.CapstoneProject.entities.Post;
 import simonelli.fabio.CapstoneProject.entities.User;
@@ -18,6 +22,7 @@ import simonelli.fabio.CapstoneProject.repositories.HashtagsDAO;
 import simonelli.fabio.CapstoneProject.repositories.PostsDAO;
 import simonelli.fabio.CapstoneProject.repositories.UsersDAO;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,25 +47,39 @@ public class PostService {
     @Autowired
     CommentsDAO commentsDAO;
 
+    @Autowired
+    Cloudinary cloudinaryUploader;
+
+    @Autowired
+    @Lazy
+    FolderService folderService;
+
     public Page<PostResponseDTO> getAllPosts(User user, int page, int size, String orderBy) {
         if (size >= 50) size = 50;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).descending());
         Page<Post> postPage = postsDAO.findAll(pageable);
         Page<PostResponseDTO> responseDTOPage = postPage.map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
             boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
+            boolean isSaved = folderService.existsByUserAndPost(user.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, isSaved, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
         });
         return responseDTOPage;
     }
 
     // in questo caso usare transactional è indifferente, viene gestito da Spring Data. lo tengo per abitudine e chiarezza del codice.
     @Transactional
-    public PostResponseDTO createPost(User currentUser, NewPostDTO body) {
+    public PostResponseDTO createPost(MultipartFile file, User currentUser, NewPostDTO body) throws IOException {
+        String url = null;
+        if (!(file == null)) {
+            url = (String) cloudinaryUploader.uploader()
+                    .upload(file.getBytes(), ObjectUtils.emptyMap())
+                    .get("url");
+        }
         Post newPost = new Post();
         newPost.setContent(body.content());
         newPost.setTitle(body.title());
-        newPost.setImageURL(body.imageURL());
+        newPost.setImageURL(url == null ? body.imageURL() : url);
         newPost.setUser(currentUser);
         // aggiungi il post alla lista di post dello user
         User user = usersDAO.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Utente con ID " + currentUser.getId() + " non trovato. Sembrano esserci problemi con il token"));
@@ -70,18 +89,33 @@ public class PostService {
 
         PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(newPost.getUser().getId(), newPost.getUser().getUsername(), newPost.getUser().getAvatarURL());
         boolean isLiked = likeService.existsByUserAndPost(user.getId(), newPost.getId());
-        return new PostResponseDTO(newPost.getId(), newPost.getTitle(), newPost.getContent(), newPost.getImageURL(), newPost.getPublishDate(), likeService.getPostLikesCount(newPost.getId()), isLiked, commentsDAO.countByPostId(newPost.getId()), postUserDataResponseDTO);
+        boolean isSaved = folderService.existsByUserAndPost(user.getId(), newPost.getId());
+        return new PostResponseDTO(newPost.getId(), newPost.getTitle(), newPost.getContent(), newPost.getImageURL(), newPost.getPublishDate(), likeService.getPostLikesCount(newPost.getId()), isLiked, isSaved, commentsDAO.countByPostId(newPost.getId()), postUserDataResponseDTO);
     }
 
     public PostResponseDTO findById(User user, UUID id) {
         Post found = postsDAO.findById(id).orElseThrow(() -> new NotFoundException("Post con ID " + id + " non trovato."));
         PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(found.getUser().getId(), found.getUser().getUsername(), found.getUser().getAvatarURL());
         boolean isLiked = likeService.existsByUserAndPost(user.getId(), found.getId());
-        return new PostResponseDTO(id, found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), isLiked, commentsDAO.countByPostId(found.getId()), postUserDataResponseDTO);
+        boolean isSaved = folderService.existsByUserAndPost(user.getId(), found.getId());
+        return new PostResponseDTO(id, found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), isLiked, isSaved, commentsDAO.countByPostId(found.getId()), postUserDataResponseDTO);
     }
 
     public Post findPostById(UUID id) {
         return postsDAO.findById(id).orElseThrow(() -> new NotFoundException("Post con ID " + id + " non trovato."));
+    }
+
+    public Page<PostResponseDTO> findPostByTitle(User currentUser, String title, int page, int size, String orderBy){
+        if (size >= 50) size = 50;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).descending());
+        Page<Post> postPage = postsDAO.findByTitleContainingIgnoreCase(title, pageable);
+        Page<PostResponseDTO> responseDTOPage = postPage.map(post -> {
+            PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
+            boolean isLiked = likeService.existsByUserAndPost(currentUser.getId(), post.getId());
+            boolean isSaved = folderService.existsByUserAndPost(currentUser.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, isSaved, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
+        });
+        return responseDTOPage;
     }
 
     public void findByIdAndDelete(UUID id) {
@@ -111,7 +145,8 @@ public class PostService {
         postsDAO.save(found);
         PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(found.getUser().getId(), found.getUser().getUsername(), found.getUser().getAvatarURL());
         boolean isLiked = likeService.existsByUserAndPost(user.getId(), found.getId());
-        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), isLiked, commentsDAO.countByPostId(found.getId()), postUserDataResponseDTO);
+        boolean isSaved = folderService.existsByUserAndPost(user.getId(), found.getId());
+        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), isLiked, isSaved, commentsDAO.countByPostId(found.getId()), postUserDataResponseDTO);
     }
 
     public List<PostResponseDTO> findByUserId(UUID userId) {
@@ -119,7 +154,8 @@ public class PostService {
         List<PostResponseDTO> postResponseDTOS = postsDAO.findByUser(user).stream().map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
             boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
+            boolean isSaved = folderService.existsByUserAndPost(user.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, isSaved, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
         }).toList();
 
         return postResponseDTOS;
@@ -129,7 +165,8 @@ public class PostService {
         List<PostResponseDTO> postResponseDTOS = postsDAO.findByUser(user).stream().map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
             boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
+            boolean isSaved = folderService.existsByUserAndPost(user.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, isSaved, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
         }).toList();
 
         return postResponseDTOS;
@@ -145,7 +182,8 @@ public class PostService {
         postsDAO.save(found);
         PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(found.getUser().getId(), found.getUser().getUsername(), found.getUser().getAvatarURL());
         boolean isLiked = likeService.existsByUserAndPost(user.getId(), found.getId());
-        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), isLiked, commentsDAO.countByPostId(found.getId()), postUserDataResponseDTO);
+        boolean isSaved = folderService.existsByUserAndPost(user.getId(), found.getId());
+        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), isLiked, isSaved, commentsDAO.countByPostId(found.getId()), postUserDataResponseDTO);
     }
 
     @Transactional
@@ -157,6 +195,7 @@ public class PostService {
         found.removeHashtag(newHashtag);
         PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(found.getUser().getId(), found.getUser().getUsername(), found.getUser().getAvatarURL());
         boolean isLiked = likeService.existsByUserAndPost(user.getId(), found.getId());
-        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), isLiked, commentsDAO.countByPostId(found.getId()), postUserDataResponseDTO);
+        boolean isSaved = folderService.existsByUserAndPost(user.getId(), found.getId());
+        return new PostResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getImageURL(), found.getPublishDate(), likeService.getPostLikesCount(found.getId()), isLiked, isSaved, commentsDAO.countByPostId(found.getId()), postUserDataResponseDTO);
     }
 }

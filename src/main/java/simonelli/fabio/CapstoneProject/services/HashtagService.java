@@ -1,6 +1,7 @@
 package simonelli.fabio.CapstoneProject.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,10 @@ public class HashtagService {
     @Autowired
     CommentsDAO commentsDAO;
 
+    @Autowired
+    @Lazy
+    FolderService folderService;
+
     public Set<HashtagResponseDTO> findAllHashtags(){
         return new HashSet<>(hashtagsDAO.findAll().stream().map((hashtag)->{
             return new HashtagResponseDTO(hashtag.getId(), hashtag.getHashtagText());
@@ -51,12 +56,13 @@ public class HashtagService {
     public Page<PostResponseDTO> findPostsByHashtag(User user, String hashtag, int page, int size, String orderBy) {
         if(size > 30) size=30;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        Page<Post> postsPage = postsDAO.findByHashtags_HashtagText(hashtag, pageable);
+        Page<Post> postsPage = postsDAO.findByHashtags_HashtagTextContainingIgnoreCase(hashtag, pageable);
 
         Page<PostResponseDTO> responseDTOPage = postsPage.map(post -> {
             PostUserDataResponseDTO postUserDataResponseDTO = new PostUserDataResponseDTO(post.getUser().getId(), post.getUser().getUsername(), post.getUser().getAvatarURL());
             boolean isLiked = likeService.existsByUserAndPost(user.getId(), post.getId());
-            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
+            boolean isSaved = folderService.existsByUserAndPost(user.getId(), post.getId());
+            return new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getImageURL(), post.getPublishDate(), likeService.getPostLikesCount(post.getId()), isLiked, isSaved, commentsDAO.countByPostId(post.getId()), postUserDataResponseDTO);
         });
         return responseDTOPage;
     }
@@ -65,6 +71,17 @@ public class HashtagService {
         if(size > 20) size = 20;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
         Page<Hashtag> hashtagPage = hashtagsDAO.findByPostsId(postId, pageable);
+
+        Page<HashtagResponseDTO> responseDTOPage = hashtagPage.map(hashtag -> {
+            return new HashtagResponseDTO(hashtag.getId(), hashtag.getHashtagText());
+        });
+        return responseDTOPage;
+    }
+
+    public Page<HashtagResponseDTO> getHashtagsByText(String query, int page, int size, String orderBy){
+        if(size > 10) size = 10;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        Page<Hashtag> hashtagPage = hashtagsDAO.findByHashtagTextContainingIgnoreCase(query, pageable);
 
         Page<HashtagResponseDTO> responseDTOPage = hashtagPage.map(hashtag -> {
             return new HashtagResponseDTO(hashtag.getId(), hashtag.getHashtagText());

@@ -44,7 +44,7 @@ export const getAllPosts = (token) => {
     dispatch(getPostsRequest());
     try {
       const data = await fetchApi(
-        POSTS_ENDPOINTS.GET_ALL_POSTS,
+        POSTS_ENDPOINTS.GET_ALL_POSTS + "?size=50&orderBy=publishDate",
         "GET",
         {},
         token

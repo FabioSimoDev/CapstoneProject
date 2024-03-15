@@ -43,6 +43,14 @@ public class UserController {
         return usersService.findById(userId);
     }
 
+    @GetMapping("/username/{username}")
+    public Page<User> getUsersByUsername(@PathVariable String username,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int size,
+                                         @RequestParam(defaultValue = "id") String orderBy){
+        return usersService.findUsersByUsernameSample(username, page, size, orderBy);
+    }
+
     @PutMapping("/me/updateProfile")
     public User updateUser(@AuthenticationPrincipal User currentUser, @RequestBody @Validated UpdateExistingUserDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
@@ -50,6 +58,20 @@ public class UserController {
         } else {
             return authService.updateUser(currentUser, body);
         }
+    }
+
+    @PostMapping("/follow/{userId}")
+    public void followUser(@AuthenticationPrincipal User currentUser, @PathVariable UUID userId){
+        usersService.followUser(currentUser, userId);
+    }
+    @PostMapping("/unfollow/{userId}")
+    public void unfollowUser(@AuthenticationPrincipal User currentUser, @PathVariable UUID userId){
+        usersService.unfollowUser(currentUser, userId);
+    }
+
+    @GetMapping("/follows/{userId}")
+    public boolean isFollowing(@AuthenticationPrincipal User currentUser, @PathVariable UUID userId){
+        return usersService.isFollowing(currentUser, userId);
     }
 
     @DeleteMapping("/{id}")
